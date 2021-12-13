@@ -43,7 +43,6 @@ class ThemeProvider extends ChangeNotifier {
     notifyListeners();
   }
   Future<void> switchTheme() async {
-    print("b ");
     if (_localeManager.getBoolValue(PreferencesKeys.LIGHT_THEME)) {
       _currentTheme = AppThemeDark.instance.theme;
       _currentAppThemeEnum = PreferencesKeys.DARK_THEME;
