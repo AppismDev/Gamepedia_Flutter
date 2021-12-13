@@ -5,10 +5,8 @@ import 'package:gamepedia/Core/Constans/Enums/preferences_keys.dart';
 import 'package:gamepedia/Core/Init/Cache/locale_manager.dart';
 import 'package:gamepedia/Core/Init/Language/language_manager.dart';
 import 'package:gamepedia/Core/Init/Notifier/application_providers.dart';
-import 'package:gamepedia/Core/Init/Theme/app_theme_dark.dart';
 import 'package:gamepedia/Providers/Language/language_provider.dart';
 import 'package:gamepedia/Providers/Theme/theme_provider.dart';
-import 'package:gamepedia/Services/ApiService/api_service.dart';
 import 'package:gamepedia/Views/SplashScreen/View/splash_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -16,9 +14,12 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 
 Future<void> main() async {
+
+  // init
   WidgetsFlutterBinding.ensureInitialized();
-  PreferencesKeys _themeKey = await init();
-  await dotenv.load(fileName: ".env");
+  PreferencesKeys _themeKey = await initLocalManager();
+  await ensureInitialized();
+
 
   runApp(
     MultiProvider(
@@ -30,18 +31,24 @@ Future<void> main() async {
       ),
     ),
   );
+
 }
 
-Future<PreferencesKeys> init() async {
+Future<void> ensureInitialized() async {
+  await dotenv.load(fileName: ".env");
+  await EasyLocalization.ensureInitialized();
+}
+
+Future<PreferencesKeys> initLocalManager() async {
   LocaleManager _localeManager = LocaleManager.instance;
   await LocaleManager.preferencesInit();
-  await EasyLocalization.ensureInitialized();
-  PreferencesKeys preferencesKeys = _localeManager.getBoolValue(PreferencesKeys.DARK_THEME)
+  PreferencesKeys _themeKey = _localeManager.getBoolValue(PreferencesKeys.DARK_THEME)
       ? PreferencesKeys.DARK_THEME
       : PreferencesKeys.LIGHT_THEME;
-  return preferencesKeys;
-
+  return _themeKey;
 }
+
+
 
 class Gamepedia extends StatelessWidget {
   @override

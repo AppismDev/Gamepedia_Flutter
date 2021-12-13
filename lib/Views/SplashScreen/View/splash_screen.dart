@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:gamepedia/Views/HomePage/View/home_page.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:gamepedia/Views/ErrorPage/View/error_page_view.dart';
+import 'package:gamepedia/Views/HomePage/View/home_page_view.dart';
+import 'package:gamepedia/Views/SplashScreen/ViewModels/splash_screen_viewmodel.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -9,13 +12,22 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  SplashScreenViewModel _viewModel = SplashScreenViewModel();
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    Future.delayed(Duration(seconds: 0)).then((value) {
-      MaterialPageRoute route = MaterialPageRoute(builder: (context) => HomePage());
-      Navigator.of(context).pushReplacement(route);
+    _viewModel.checkAccessToken().then((accessToken) {
+      Future.delayed(Duration(seconds: 2)).then((_) {
+        if(accessToken != null){
+          MaterialPageRoute route = MaterialPageRoute(builder: (context) => HomePageView());
+          Navigator.of(context).pushReplacement(route);
+        }else{
+          MaterialPageRoute route = MaterialPageRoute(builder: (context) => ErrorPageView());
+          Navigator.of(context).pushReplacement(route);
+        }
+      });
+
     });
   }
 
@@ -28,7 +40,8 @@ class _SplashScreenState extends State<SplashScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text("Splash Screen"),
-            CircularProgressIndicator()
+            SizedBox(height: 30),
+            CircularProgressIndicator(),
           ],
         ),
       ),
