@@ -1,1 +1,1 @@
-enum PreferencesKeys{ IS_FIRST_APP, DARK_THEME, LIGHT_THEME}
+enum PreferencesKeys{ IS_FIRST_APP, DARK_THEME, LIGHT_THEME, LANGUAGE}
