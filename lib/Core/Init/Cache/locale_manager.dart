@@ -46,4 +46,7 @@ class LocaleManager {
 
   bool getBoolValue(PreferencesKeys key) =>
       _preferences!.getBool(key.toString()) ?? false;
+
+  bool containsKey(PreferencesKeys key) =>
+      _preferences!.containsKey(key.toString());
 }
