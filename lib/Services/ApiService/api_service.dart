@@ -7,36 +7,34 @@ import 'package:gamepedia/Models/ApiModels/token_info.dart';
 import 'package:gamepedia/Services/ApiService/i_api_service.dart';
 import 'package:http/http.dart' as http;
 
-class ApiService extends IApiService{
-
+class ApiService extends IApiService {
+  
   ApiService._privateConstructor();
   static final ApiService _instance = ApiService._privateConstructor();
+  static  ApiService get instance => _instance;
+
+
+
 
   String? accessToken;
   final AppConstants _appConstants = AppConstants.instance;
 
-  factory ApiService({String? accessToken}) {
-    if(accessToken != null){
-      _instance.accessToken = accessToken;
-    }else{
-      _instance.getTokenInfo();
-    }
-    return _instance;
-  }
+
+
 
 
   @override
-  Future<TokenInfo?> getTokenInfo() async{
+  Future<TokenInfo?> getTokenInfo() async {
     try {
-      Uri url = Uri.parse(_appConstants.API_BASE_URL+"/token");
+      Uri url = Uri.parse(_appConstants.API_BASE_URL + "/token");
       http.Response response = await http.get(url);
 
-      if(response.statusCode == 200){
-        Map<String,dynamic> body = jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        Map<String, dynamic> body = jsonDecode(response.body);
         TokenInfo tokenInfo = TokenInfo.fromJson(body);
         _instance.accessToken = tokenInfo.accessToken;
         return tokenInfo;
-      }else{
+      } else {
         print("[HATA] [ApiService] [getTokenInfo] --> " + response.statusCode.toString());
         print(response.body);
         return null;
@@ -47,12 +45,38 @@ class ApiService extends IApiService{
     }
   }
 
-
-
   @override
-  Future<List<GameModel?>?> getBestOfAllTime({int? page}) {
-    // TODO: implement getBestOfAllTime
-    throw UnimplementedError();
+  Future<List<GameModel?>?> getBestOfAllTime({int? page}) async {
+    try {
+      page ??= 1;
+      Uri url = Uri.parse(_appConstants.getBestOfAllTimeUrl(page));
+
+      if (accessToken == null) {
+        throw Exception("Token Not be Null");
+      }
+
+      Map<String, String> headers = {'Authorization': 'token=' + accessToken!};
+
+      http.Response response = await http.get(url, headers: headers);
+
+      if (response.statusCode == 200) {
+        List<GameModel?> games = [];
+        List body = jsonDecode(response.body);
+
+        body.forEach((gameElement) {
+          games.add(GameModel.fromJson(gameElement));
+        });
+        print(games);
+        return games;
+      } else {
+        print("[HATA] [ApiService] [getTokenInfo] --> " + response.statusCode.toString());
+        print(response.body);
+        return null;
+      }
+    } catch (e) {
+      print("[HATA] [ApiService] [getBestOfAllTime] --> " + e.toString());
+      return null;
+    }
   }
 
   @override
@@ -60,6 +84,4 @@ class ApiService extends IApiService{
     // TODO: implement getCover
     throw UnimplementedError();
   }
-
-
 }

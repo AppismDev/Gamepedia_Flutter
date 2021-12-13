@@ -15,8 +15,6 @@ Future<void> main() async {
   PreferencesKeys _themeKey = await init();
   await dotenv.load(fileName: ".env");
 
-  ApiService apiService = ApiService();
-
 
   runApp(
     MultiProvider(
