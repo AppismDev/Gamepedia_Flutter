@@ -12,8 +12,12 @@ class AppConstants {
 
   String get GAMES_ENDPOINT => API_BASE_URL + "/games";
   String get COVER_ENDPOINT => API_BASE_URL + "/cover";
+  String get SCREENSHOTS_ENDPOINT => API_BASE_URL + "/screenshots";
+  String get ARTWORKS_ENDPOINT => API_BASE_URL + "/artworks";
 
   String getBestOfAllTimeUrl(int page) => GAMES_ENDPOINT + "/bestOfAllTime?page=$page";
-  String getCoverUrl(String idString) => COVER_ENDPOINT + "/cover/$idString";
+  String getCoverUrl(String idString) => COVER_ENDPOINT + "/$idString";
+  String getScreenshotsUrl(String idString) => SCREENSHOTS_ENDPOINT + "/$idString";
+  String getArtworksUrl(String idString) => ARTWORKS_ENDPOINT + "/$idString";
 
 }
