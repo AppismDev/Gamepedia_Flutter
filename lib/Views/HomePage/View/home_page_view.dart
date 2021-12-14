@@ -14,6 +14,7 @@ import 'package:gamepedia/Views/DetailsPage/details_page.dart';
 import 'package:gamepedia/Views/HomePage/ViewModel/home_page_viewmodel.dart';
 import 'package:gamepedia/Widgets/GameCard/home_page_game_card.dart';
 import 'package:gamepedia/Widgets/ListView/card_listview.dart';
+import 'package:gamepedia/Widgets/Logo/gamepedia_logo.dart';
 
 import 'package:provider/provider.dart';
 import 'dart:math' as math;
@@ -89,7 +90,9 @@ class _HomePageViewState extends State<HomePageView> {
     return AppBar(
       backgroundColor: Colors.transparent,
       elevation: 0,
-      title: Text("Gamepedia"),
+      title: GamepediaLogo(
+        size: 18,
+      ),
       actions: [IconButton(onPressed: (){}, icon: Icon(Icons.search))],
     );
   }
