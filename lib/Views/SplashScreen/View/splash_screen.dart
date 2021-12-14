@@ -3,6 +3,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:gamepedia/Views/ErrorPage/View/error_page_view.dart';
 import 'package:gamepedia/Views/HomePage/View/home_page_view.dart';
 import 'package:gamepedia/Views/SplashScreen/ViewModels/splash_screen_viewmodel.dart';
+import 'package:gamepedia/Widgets/Logo/gamepedia_logo.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -39,9 +40,14 @@ class _SplashScreenState extends State<SplashScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text("Splash Screen"),
+            GamepediaLogo(
+              size: 30,
+            ),
             SizedBox(height: 30),
-            CircularProgressIndicator(),
+            CircularProgressIndicator(
+              strokeWidth: 2,
+              valueColor: AlwaysStoppedAnimation<Color>(Color(0xffE50914)),
+            ),
           ],
         ),
       ),

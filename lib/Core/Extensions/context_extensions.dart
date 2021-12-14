@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:gamepedia/Core/Constans/Enums/theme_enums.dart';
+import 'package:gamepedia/Providers/Theme/theme_provider.dart';
 import 'package:provider/provider.dart';
 
 extension ContextExtensions on BuildContext{
@@ -24,7 +26,7 @@ extension ThemeExtensions on BuildContext{
   CardTheme get cardTheme => theme.cardTheme;
   IconThemeData get iconThemeData => theme.iconTheme;
   ColorScheme get colors => theme.colorScheme;
-  // AppThemes get currentAppThemeEnum => Provider.of<ThemeProvider>(this).currentAppThemeEnum;
+  ThemeEnums get currentAppThemeEnum => Provider.of<ThemeProvider>(this).currentAppThemeEnum;
   // ThemeData get otherTheme => Provider.of<ThemeProvider>(this).otherTheme;
   // MaterialColor get primarySwatchColor => Provider.of<ThemeProvider>(this).currentPrimarySwatch;
 }
