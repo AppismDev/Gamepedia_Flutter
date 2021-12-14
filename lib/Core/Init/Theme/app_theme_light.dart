@@ -17,6 +17,12 @@ class AppThemeLight implements IAppTheme{
         .copyWith(secondary:  Color(0xffE50914)),
     primaryColor: Color(0xffE50914),
     brightness: Brightness.light,
+    iconTheme: IconThemeData(
+      color: Colors.black
+    ),
+    primaryIconTheme: IconThemeData(
+      color: Color(0xffE50914)
+    ),
     scaffoldBackgroundColor: Color(0xffF4F4F4),
     shadowColor: const Color(0xFF141414),
     backgroundColor: const Color(0xFF212121),
@@ -41,8 +47,8 @@ class AppThemeLight implements IAppTheme{
       headline4: GoogleFonts.montserrat(color: Colors.black),
       headline5: GoogleFonts.montserrat(color: Colors.black),
       headline6: GoogleFonts.montserrat(color: Colors.black),
-      subtitle1: GoogleFonts.montserrat(color: Colors.black),
-      subtitle2: GoogleFonts.montserrat(color: Colors.black),
+      subtitle1: GoogleFonts.montserrat(color: Colors.grey.shade700),
+      subtitle2: GoogleFonts.montserrat(color: Colors.grey.shade700),
       bodyText1: GoogleFonts.montserrat(color: Colors.black),
       bodyText2: GoogleFonts.montserrat(color: Colors.black),
     ),

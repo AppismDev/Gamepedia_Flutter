@@ -20,6 +20,8 @@ class AppThemeDark implements IAppTheme {
         shadowColor: const Color(0xFF141414),
         backgroundColor: const Color(0xFF212121),
         dividerColor: Colors.black12,
+        iconTheme: IconThemeData(color: Colors.white),
+        primaryIconTheme: IconThemeData(color: Color(0xffE50914)),
         appBarTheme: AppBarTheme(
           elevation: 0,
           centerTitle: true,
@@ -52,8 +54,6 @@ class AppThemeDark implements IAppTheme {
           style: TextButton.styleFrom(
               primary: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
         ),
-
-
         inputDecorationTheme: InputDecorationTheme(
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
           contentPadding: EdgeInsets.symmetric(

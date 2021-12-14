@@ -53,8 +53,7 @@ Future<PreferencesKeys> initLocalManager() async {
 class Gamepedia extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-
-    context.setLocale(Provider.of<LanguageProvider>(context).currentLocale);
+    context.setLocale(Provider.of<LanguageProvider>(context, listen: false).currentLocale);
     return MaterialApp(
       title: 'Material App',
       supportedLocales: context.supportedLocales,

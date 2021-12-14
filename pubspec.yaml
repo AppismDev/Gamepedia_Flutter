@@ -43,6 +43,8 @@ dependencies:
   google_fonts: ^2.1.0
   http: ^0.13.4
   flutter_dotenv: ^5.0.2
+  flutter_vector_icons: ^1.0.0
+  shimmer: ^2.0.0
 
 
 dev_dependencies:
