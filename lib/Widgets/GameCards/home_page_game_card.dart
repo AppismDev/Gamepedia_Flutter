@@ -4,7 +4,7 @@ import 'package:gamepedia/Models/ApiModels/game_model.dart';
 import 'package:gamepedia/Views/DetailsPage/details_page.dart';
 
 
-class HomePageGameCard extends StatefulWidget {
+class HomePageGameCard extends StatelessWidget {
   GameModel gameModel;
   double? width;
   double? height;
@@ -12,24 +12,19 @@ class HomePageGameCard extends StatefulWidget {
   HomePageGameCard({Key? key,required this.gameModel, this.width, this.height}) : super(key: key);
 
   @override
-  _HomePageGameCardState createState() => _HomePageGameCardState();
-}
-
-class _HomePageGameCardState extends State<HomePageGameCard> {
-  @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: (){
-        MaterialPageRoute route = MaterialPageRoute(builder: (context)=> GameDetailsPage(gameModel: widget.gameModel,));
+        MaterialPageRoute route = MaterialPageRoute(builder: (context)=> GameDetailsPage(gameModel: gameModel));
         Navigator.of(context).push(route);
       },
       child: Align(
         child: Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12)
+              borderRadius: BorderRadius.circular(12)
           ),
-          height: widget.height ?? 200,
-          width: widget.width ?? 400,
+          height: height ?? 200,
+          width: width ?? 400,
           child: Card(
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             color: Colors.red,
@@ -41,7 +36,7 @@ class _HomePageGameCardState extends State<HomePageGameCard> {
                   Align(
                     alignment: Alignment.bottomLeft,
                     child: Text(
-                      "${widget.gameModel.name}",
+                      "${gameModel.name}",
                       style: context.theme.textTheme.headline6!
                           .copyWith(color: Colors.white, fontWeight: FontWeight.bold),
                     ),
@@ -54,4 +49,7 @@ class _HomePageGameCardState extends State<HomePageGameCard> {
       ),
     );
   }
+
+
 }
+
