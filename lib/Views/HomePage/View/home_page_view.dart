@@ -13,10 +13,13 @@ import 'package:gamepedia/Providers/Theme/theme_provider.dart';
 import 'package:gamepedia/Views/DetailsPage/details_page.dart';
 import 'package:gamepedia/Views/HomePage/ViewModel/home_page_viewmodel.dart';
 import 'package:gamepedia/Widgets/GameCards/home_page_game_card.dart';
+import 'package:gamepedia/Widgets/GameCards/RecommendedGameCard/recommended_game_card.dart';
 import 'package:gamepedia/Widgets/Logo/gamepedia_logo.dart';
 
 import 'package:provider/provider.dart';
 import 'dart:math' as math;
+
+import 'package:shimmer/shimmer.dart';
 
 class HomePageView extends StatefulWidget {
   HomePageView({Key? key}) : super(key: key);
@@ -101,6 +104,7 @@ class _HomePageViewState extends State<HomePageView> {
       physics: BouncingScrollPhysics(),
       child: Column(
         children: [
+          // Recommended Games
           Padding(
             padding: context.paddingOnlyTopLow,
             child: Observer(
@@ -110,6 +114,7 @@ class _HomePageViewState extends State<HomePageView> {
                     width: context.screenWidth,
                     height: 200,
                     child: ListView.builder(
+                        cacheExtent: context.screenWidth * 4,
                         physics: BouncingScrollPhysics(),
                         scrollDirection: Axis.horizontal,
                         itemCount: _homePageViewModel.bestOfAllYearGames.length,
@@ -117,25 +122,50 @@ class _HomePageViewState extends State<HomePageView> {
                           if (index == 0 || index == _homePageViewModel.bestOfAllYearGames.length - 1) {
                             return SizedBox(
                               width: context.mediumValue,
-
                             );
                           } else {
                             if (_homePageViewModel.bestOfAllYearGames[index] != null) {
-                              return HomePageGameCard(
+                              return RecommendedGameCard(
                                 gameModel: _homePageViewModel.bestOfAllYearGames[index]!,
                               );
                             } else {
-                              return SizedBox();
+                              return Container(
+                                width: context.screenWidth,
+                                height: 200,
+                                child: Shimmer.fromColors(
+                                  child: Container(
+                                    width: context.screenWidth,
+                                    height: 200,
+                                    color: Colors.grey,
+                                  ),
+                                  baseColor: Colors.grey.shade800,
+                                  highlightColor: Colors.grey.shade200,
+                                ),
+                              );
                             }
                           }
                         }),
                   );
                 } else {
-                  return SizedBox();
+                  return Container(
+                    width: context.screenWidth,
+                    height: 200,
+                    child: Shimmer.fromColors(
+                      child: Container(
+                        width: context.screenWidth,
+                        height: 200,
+                      ),
+                      baseColor: Colors.grey.shade800,
+                      highlightColor: Colors.grey.shade200,
+                    ),
+                  );
+
                 }
               },
             ),
           ),
+
+          // Categories
           Container(
             margin: context.paddingOnlyTopMedium,
             width: context.screenWidth,
@@ -179,6 +209,7 @@ class _HomePageViewState extends State<HomePageView> {
                 }),
           ),
 
+          //New Released Popular Games
           Padding(
             padding: context.paddingOnlyTopHigh,
             child: Column(
@@ -228,6 +259,7 @@ class _HomePageViewState extends State<HomePageView> {
               ],
             ),
           ),
+          //Best Of Year Games
           Padding(
             padding: context.paddingOnlyTopHigh,
             child: Column(
@@ -277,6 +309,7 @@ class _HomePageViewState extends State<HomePageView> {
               ],
             ),
           ),
+          //Best Of Year Games
           Padding(
             padding: context.paddingOnlyTopHigh,
             child: Column(
@@ -326,7 +359,7 @@ class _HomePageViewState extends State<HomePageView> {
               ],
             ),
           ),
-          SizedBox(height: context.mediumValue,)
+          SizedBox(height: context.mediumValue)
 
         ],
       ),

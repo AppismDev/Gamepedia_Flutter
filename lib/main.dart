@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:gamepedia/Core/Constans/App/app_constants.dart';
+import 'package:gamepedia/Core/Constans/Application/app_constants.dart';
 import 'package:gamepedia/Core/Constans/Enums/preferences_keys.dart';
 import 'package:gamepedia/Core/Init/Cache/locale_manager.dart';
 import 'package:gamepedia/Core/Init/Language/language_manager.dart';
@@ -19,13 +20,13 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   PreferencesKeys _themeKey = await initLocalManager();
   await ensureInitialized();
-
+  AppConstants _appConstants = AppConstants.instance;
 
   runApp(
     MultiProvider(
       providers: [...ApplicationProviders.instance.dependItems(_themeKey)],
       child: EasyLocalization(
-        path: ApplicationConstants.LANG_ASSET_PATH,
+        path: _appConstants.LANG_ASSET_PATH,
         supportedLocales: LanguageManager.instance.supportedLocales,
         child: Gamepedia(),
       ),
