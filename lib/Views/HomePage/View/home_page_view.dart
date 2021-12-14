@@ -12,8 +12,7 @@ import 'package:gamepedia/Providers/Language/language_provider.dart';
 import 'package:gamepedia/Providers/Theme/theme_provider.dart';
 import 'package:gamepedia/Views/DetailsPage/details_page.dart';
 import 'package:gamepedia/Views/HomePage/ViewModel/home_page_viewmodel.dart';
-import 'package:gamepedia/Widgets/GameCard/home_page_game_card.dart';
-import 'package:gamepedia/Widgets/ListView/card_listview.dart';
+import 'package:gamepedia/Widgets/GameCards/home_page_game_card.dart';
 import 'package:gamepedia/Widgets/Logo/gamepedia_logo.dart';
 
 import 'package:provider/provider.dart';
@@ -97,165 +96,240 @@ class _HomePageViewState extends State<HomePageView> {
     );
   }
 
-
   Widget buildBody() {
     return SingleChildScrollView(
       physics: BouncingScrollPhysics(),
       child: Column(
         children: [
-          Observer(
-            builder:(_) {
-              if(_homePageViewModel.bestOfAllYearGames.length > 0) {
-                return CardListView(
-                    itemCount: _homePageViewModel.bestOfAllYearGames.length,
-                    itemHeight: 200,
-                    itemBuilder: (context, index) {
-                      if (index == 0 || index == _homePageViewModel.bestOfAllYearGames.length-1) {
-                        return SizedBox(
-                          width: 12,
-                        );
-                      } else {
-                        return HomePageGameCard(
-                          borderRadius: 12,
-                          height: 220,
-                          width: 400,
-                          onTap: () {
-                            MaterialPageRoute route = MaterialPageRoute(builder: (context) => GameDetailsPage());
-                            Navigator.of(context).push(route);
-                          },
-                          child: Container(
-                            color: Colors.red,
-                            child: Align(
-                              alignment: Alignment.bottomLeft,
-                              child: Padding(
-                                padding: const EdgeInsets.all(12.0),
-                                child: Text(
-                                  "${_homePageViewModel.bestOfAllYearGames[index]?.name}",
-                                  style: context.theme.textTheme.headline6!
-                                      .copyWith(color: Colors.white, fontWeight: FontWeight.bold),
-                                ),
+          Padding(
+            padding: context.paddingOnlyTopLow,
+            child: Observer(
+              builder: (_) {
+                if (_homePageViewModel.bestOfAllYearGames.length > 0) {
+                  return Container(
+                    width: context.screenWidth,
+                    height: 200,
+                    child: ListView.builder(
+                        physics: BouncingScrollPhysics(),
+                        scrollDirection: Axis.horizontal,
+                        itemCount: _homePageViewModel.bestOfAllYearGames.length,
+                        itemBuilder: (context, index) {
+                          if (index == 0 || index == _homePageViewModel.bestOfAllYearGames.length - 1) {
+                            return SizedBox(
+                              width: context.mediumValue,
+
+                            );
+                          } else {
+                            if (_homePageViewModel.bestOfAllYearGames[index] != null) {
+                              return HomePageGameCard(
+                                gameModel: _homePageViewModel.bestOfAllYearGames[index]!,
+                              );
+                            } else {
+                              return SizedBox();
+                            }
+                          }
+                        }),
+                  );
+                } else {
+                  return SizedBox();
+                }
+              },
+            ),
+          ),
+          Container(
+            margin: context.paddingOnlyTopMedium,
+            width: context.screenWidth,
+            height: 80,
+            child: ListView.builder(
+                physics: BouncingScrollPhysics(),
+                scrollDirection: Axis.horizontal,
+                itemCount:6,
+                itemBuilder: (context, index) {
+                  if (index == 0 || index == 5) {
+                    return SizedBox(
+                      width: context.mediumValue,
+                    );
+                  } else {
+                    return Align(
+                      child: Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12)
+                        ),
+                        height: 80,
+                        width: 185,
+                        child: Card(
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          color: Colors.red,
+                          elevation: 2,
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: Padding(
+                              padding: const EdgeInsets.all(12.0),
+                              child: Text(
+                                "ACTION",
+                                style: context.theme.textTheme.headline6!
+                                    .copyWith( fontSize: 18,color: Colors.white, fontWeight: FontWeight.bold),
                               ),
                             ),
                           ),
-                        );
-                      }
-                    },
-                );
-              }else{
-                return SizedBox();
-              }
-            },
+                        ),
+                      ),
+                    );
+                  }
+                }),
           ),
-          SizedBox(
-            height: 35,
-          ),
-          CardListView(
-            itemBuilder: (context, index) {
-              if (index == 0 || index == 4) {
-                return const SizedBox(
-                  width: 12,
-                );
-              }
-              return HomePageGameCard(
-                borderRadius: 10,
-                width: 165,
-                height: 75,
-                onTap: () async {},
-                child: Container(
-                  color: Colors.red,
-                  child: Center(
-                    child: Text(
-                      "ACTION",
-                      style: context.textTheme.subtitle1!.copyWith(fontWeight: FontWeight.bold, color: Colors.white),
-                    ),
-                  ),
-                ),
-              );
-            },
-            itemCount: 5,
-            itemHeight: 75,
-          ),
-          SizedBox(
-            height: 30,
-          ),
-          //TODO valuelara extension yazılacak
-          CardListView(
-              itemBuilder: (context, index) {
-                if (index == 0 || index == 4) {
-                  return const SizedBox(
-                    width: 12,
-                  );
-                } else {
-                  return HomePageGameCard(
-                    height: 200,
-                    onTap: () {},
-                    child: Image.network(
-                      "https://upload.wikimedia.org/wikipedia/tr/thumb/6/67/Avengersendgame.jpg/220px-Avengersendgame.jpg",
-                      fit: BoxFit.fill,
-                    ),
-                    borderRadius: 12,
-                    elevation: 3,
-                  );
-                }
-              },
-              title: LocaleKeys.homePage_newReleasedPopularGames.tr(),
-              itemCount: 5,
-              itemHeight: 200),
-          SizedBox(
-            height: 20,
-          ),
-          CardListView(
-              itemBuilder: (context, index) {
-                if (index == 0 || index == 4) {
-                  return const SizedBox(
-                    width: 12,
-                  );
-                } else {
-                  return HomePageGameCard(
-                    onTap: () {},
-                    child: Image.network(
-                      "https://upload.wikimedia.org/wikipedia/tr/thumb/6/67/Avengersendgame.jpg/220px-Avengersendgame.jpg",
-                      fit: BoxFit.fill,
-                    ),
-                    borderRadius: 12,
-                    elevation: 3,
-                  );
-                }
-              },
-              title: LocaleKeys.homePage_bestOfYear.tr(),
-              itemCount: 5,
-              itemHeight: 200),
-          SizedBox(
-            height: 20,
-          ),
-          CardListView(
-              itemBuilder: (context, index) {
-                if (index == 0 || index == 5) {
-                  return const SizedBox(
-                    width: 12,
-                  );
-                } else {
-                  return HomePageGameCard(
-                    onTap: () {},
-                    child: Image.network(
-                      "https://upload.wikimedia.org/wikipedia/tr/thumb/6/67/Avengersendgame.jpg/220px-Avengersendgame.jpg",
-                      fit: BoxFit.fill,
-                    ),
-                    borderRadius: 12,
-                    elevation: 3,
-                  );
-                }
-              },
-              title: LocaleKeys.homePage_bestOfAllTime.tr(),
-              itemCount: 5,
-              itemHeight: 200),
 
-          SizedBox(
-            height: 40,
-          )
+          Padding(
+            padding: context.paddingOnlyTopHigh,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: context.paddingHorizontalMedium,
+                  child: Text(LocaleKeys.homePage_newReleasedPopularGames.tr(), style: context.textTheme.subtitle2!.copyWith(fontWeight:FontWeight.bold, fontSize: 16 ),),
+                ),
+                Container(
+                  margin: context.paddingOnlyTopLow,
+                  width: context.screenWidth,
+                  height: 225,
+                  child: ListView.builder(
+                      physics: BouncingScrollPhysics(),
+                      scrollDirection: Axis.horizontal,
+                      itemCount: 7,
+                      itemBuilder: (context, index) {
+                        if (index == 0 || index == 6) {
+                          return SizedBox(
+                            width: context.mediumValue,
+                          );
+                        } else {
+                          return Align(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              height: 225,
+                              width: 170,
+                              child: Card(
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                elevation: 2,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: Image.network(
+                                    "https://upload.wikimedia.org/wikipedia/tr/thumb/6/67/Avengersendgame.jpg/220px-Avengersendgame.jpg",
+                                    fit: BoxFit.fill,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        }
+                      }),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: context.paddingOnlyTopHigh,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: context.paddingHorizontalMedium,
+                  child: Text(LocaleKeys.homePage_bestOfYear.tr(), style: context.textTheme.subtitle2!.copyWith(fontWeight:FontWeight.bold, fontSize: 16 ),),
+                ),
+                Container(
+                  margin: context.paddingOnlyTopLow,
+                  width: context.screenWidth,
+                  height: 225,
+                  child: ListView.builder(
+                      physics: BouncingScrollPhysics(),
+                      scrollDirection: Axis.horizontal,
+                      itemCount: 7,
+                      itemBuilder: (context, index) {
+                        if (index == 0 || index == 6) {
+                          return SizedBox(
+                            width: context.mediumValue,
+                          );
+                        } else {
+                          return Align(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              height: 225,
+                              width: 170,
+                              child: Card(
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                elevation: 2,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: Image.network(
+                                    "https://upload.wikimedia.org/wikipedia/tr/thumb/6/67/Avengersendgame.jpg/220px-Avengersendgame.jpg",
+                                    fit: BoxFit.fill,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        }
+                      }),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: context.paddingOnlyTopHigh,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: context.paddingHorizontalMedium,
+                  child: Text(LocaleKeys.homePage_bestOfAllTime.tr(), style: context.textTheme.subtitle2!.copyWith(fontWeight:FontWeight.bold, fontSize: 16 ),),
+                ),
+                Container(
+                  margin: context.paddingOnlyTopLow,
+                  width: context.screenWidth,
+                  height: 225,
+                  child: ListView.builder(
+                      physics: BouncingScrollPhysics(),
+                      scrollDirection: Axis.horizontal,
+                      itemCount: 7,
+                      itemBuilder: (context, index) {
+                        if (index == 0 || index == 6) {
+                          return SizedBox(
+                            width: context.mediumValue,
+                          );
+                        } else {
+                          return Align(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              height: 225,
+                              width: 170,
+                              child: Card(
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                elevation: 2,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: Image.network(
+                                    "https://upload.wikimedia.org/wikipedia/tr/thumb/6/67/Avengersendgame.jpg/220px-Avengersendgame.jpg",
+                                    fit: BoxFit.fill,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        }
+                      }),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: context.mediumValue,)
+
         ],
       ),
     );
   }
-
 }
