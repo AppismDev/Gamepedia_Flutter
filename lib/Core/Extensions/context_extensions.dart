@@ -42,6 +42,7 @@ extension NumberExtension on BuildContext {
 
 //TODO padding1 padding2 gibi yap
 extension PaddingExtension on BuildContext {
+  EdgeInsets get paddingAllVeryLow => EdgeInsets.all(veryLowValue);
   EdgeInsets get paddingAllLow => EdgeInsets.all(lowValue);
   EdgeInsets get paddingAllMedium => EdgeInsets.all(mediumValue);
   EdgeInsets get paddingAllHigh => EdgeInsets.all(highValue);
