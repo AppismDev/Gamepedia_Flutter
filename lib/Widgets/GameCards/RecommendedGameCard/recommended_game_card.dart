@@ -50,33 +50,43 @@ class _RecommendedGameCardState extends State<RecommendedGameCard> {
               child: Stack(
                 children: [
                   Observer(builder: (_) {
-                    if(_viewModel.loadingImage){
-                      return Positioned.fill(
+                    if (_viewModel.loadingImage) {
+                      return ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
                         child: Shimmer.fromColors(
                           child: Container(
                             width: context.screenWidth,
                             height: 200,
-                            color: Colors.transparent,
+                            color: Colors.red,
                           ),
                           baseColor: Colors.grey.shade800,
                           highlightColor: Colors.grey.shade200,
                         ),
                       );
-                    }else {
-                      if(_viewModel.gameCoverModel != null){
+                    } else {
+                      if (_viewModel.gameCoverModel != null) {
                         return Positioned.fill(
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(12),
                             child: Image.network(
-                                "${_appConstants.getImageUrl(
-                                    _viewModel.gameCoverModel!.imageId!, ImageSize.SCREENSHOT_HUGE)}",
+                              "${_appConstants.getImageUrl(_viewModel.gameCoverModel!.imageId!, ImageSize.SCREENSHOT_HUGE)}",
                               fit: BoxFit.fill,
-
                             ),
                           ),
                         );
-                      }else{
-                        return Positioned.fill(child: Container(color: Colors.grey,));
+                      } else {
+                        return ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: Shimmer.fromColors(
+                            child: Container(
+                              width: context.screenWidth,
+                              height: 200,
+                              color: Colors.red,
+                            ),
+                            baseColor: Colors.grey.shade800,
+                            highlightColor: Colors.grey.shade200,
+                          ),
+                        );
                       }
                     }
                   }),

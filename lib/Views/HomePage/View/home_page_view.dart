@@ -129,17 +129,18 @@ class _HomePageViewState extends State<HomePageView> {
                                 gameModel: _homePageViewModel.bestOfAllYearGames[index]!,
                               );
                             } else {
-                              return Container(
-                                width: context.screenWidth,
-                                height: 200,
-                                child: Shimmer.fromColors(
+                              return Shimmer.fromColors(
+                                baseColor: Colors.grey.shade800,
+                                highlightColor: Colors.grey.shade200,
+                                child: Container(
+                                  color: Colors.red,
+                                  width: context.screenWidth,
+                                  height: 200,
                                   child: Container(
                                     width: context.screenWidth,
                                     height: 200,
                                     color: Colors.grey,
                                   ),
-                                  baseColor: Colors.grey.shade800,
-                                  highlightColor: Colors.grey.shade200,
                                 ),
                               );
                             }

@@ -1,6 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:gamepedia/Core/Constans/App/app_constants.dart';
 import 'package:gamepedia/Core/Constans/Application/app_constants.dart';
 import 'package:gamepedia/Core/Constans/Enums/preferences_keys.dart';
 import 'package:gamepedia/Core/Init/Cache/locale_manager.dart';
