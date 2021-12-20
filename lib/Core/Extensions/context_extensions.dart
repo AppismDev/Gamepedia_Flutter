@@ -29,7 +29,7 @@ extension ThemeExtensions on BuildContext{
   IconThemeData get iconThemeData => theme.iconTheme;
   ColorScheme get colors => theme.colorScheme;
   ThemeEnums get currentAppThemeEnum => Provider.of<ThemeProvider>(this).currentAppThemeEnum;
-  // ThemeData get otherTheme => Provider.of<ThemeProvider>(this).otherTheme;
+  ThemeData get otherTheme => Provider.of<ThemeProvider>(this).otherTheme;
   // MaterialColor get primarySwatchColor => Provider.of<ThemeProvider>(this).currentPrimarySwatch;
 }
 

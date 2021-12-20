@@ -63,6 +63,7 @@ class ApiService extends IApiService {
         body.forEach((gameElement) {
           games.add(GameModel.fromJson(gameElement));
         });
+        games.shuffle();
         return games;
       } else {
         print("[HATA] [ApiService] [getBestOfAllTime] --> " + response.statusCode.toString());
@@ -74,6 +75,77 @@ class ApiService extends IApiService {
       return null;
     }
   }
+
+  @override
+  Future<List<GameModel>?> getBestOfLastMonths({int? page}) async {
+    try {
+      page ??= 1;
+      Uri url = Uri.parse(_appConstants.getBestOfLastMonths(page));
+
+      if (accessToken == null) {
+        throw Exception("Token Not be Null");
+      }
+
+      Map<String, String> headers = {'Authorization': 'token=' + accessToken!};
+
+      http.Response response = await http.get(url, headers: headers);
+
+      if (response.statusCode == 200) {
+        List<GameModel> games = [];
+        List body = jsonDecode(response.body);
+
+        body.forEach((gameElement) {
+          games.add(GameModel.fromJson(gameElement));
+        });
+        games.shuffle();
+        return games;
+      } else {
+        print("[HATA] [ApiService] [getBestOfLastMonths] --> " + response.statusCode.toString());
+        print(response.body);
+        return null;
+      }
+    } catch (e) {
+      print("[HATA] [ApiService] [getBestOfLastMonths] --> " + e.toString());
+      return null;
+    }
+  }
+
+  @override
+  Future<List<GameModel>?> getBestOfLastYear({int? page}) async {
+    try {
+      page ??= 1;
+      Uri url = Uri.parse(_appConstants.getBestOfLastYear(page));
+
+      if (accessToken == null) {
+        throw Exception("Token Not be Null");
+      }
+
+      Map<String, String> headers = {'Authorization': 'token=' + accessToken!};
+
+      http.Response response = await http.get(url, headers: headers);
+
+      if (response.statusCode == 200) {
+        List<GameModel> games = [];
+        List body = jsonDecode(response.body);
+
+        body.forEach((gameElement) {
+          games.add(GameModel.fromJson(gameElement));
+        });
+        games.shuffle();
+        return games;
+      } else {
+        print("[HATA] [ApiService] [getBestOfLastYear] --> " + response.statusCode.toString());
+        print(response.body);
+        return null;
+      }
+    } catch (e) {
+      print("[HATA] [ApiService] [getBestOfLastYear] --> " + e.toString());
+      return null;
+    }
+  }
+
+
+
 
   @override
   Future<List<CoverModel>?> getCover(String idString) async{

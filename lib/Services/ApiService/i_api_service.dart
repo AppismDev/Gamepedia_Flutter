@@ -14,6 +14,9 @@ abstract class IApiService{
 
   // Games Route
   Future<List<GameModel>?> getBestOfAllTime({int? page});
+  Future<List<GameModel>?> getBestOfLastMonths({int? page});
+  Future<List<GameModel>?> getBestOfLastYear({int? page});
+
 
   // Cover Route
   Future<List<CoverModel>?> getCover(String idString);
