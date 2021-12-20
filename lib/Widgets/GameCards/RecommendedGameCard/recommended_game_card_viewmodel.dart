@@ -27,7 +27,7 @@ abstract class _RecommendedGameCardViewModelBase with Store{
 
 
   @action
-  Future<void> getScreenShoot() async{
+  Future<void> getCover() async{
     _loadingImage = true;
 
     if(_gameModel.id == null) return;

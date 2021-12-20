@@ -6,7 +6,7 @@ import 'package:gamepedia/Core/Constans/Enums/image_enums.dart';
 import 'package:gamepedia/Core/Constans/Enums/theme_enums.dart';
 import 'package:gamepedia/Core/Extensions/context_extensions.dart';
 import 'package:gamepedia/Models/ApiModels/game_model.dart';
-import 'package:gamepedia/Views/DetailsPage/details_page.dart';
+import 'package:gamepedia/Views/DetailsPage/View/details_page.dart';
 import 'package:gamepedia/Widgets/GameCards/RecommendedGameCard/recommended_game_card_viewmodel.dart';
 import 'package:gamepedia/Widgets/Logo/gamepedia_logo.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -33,7 +33,7 @@ class _RecommendedGameCardState extends State<RecommendedGameCard> {
   void initState() {
     super.initState();
     _viewModel.init(widget.gameModel);
-    _viewModel.getScreenShoot();
+    _viewModel.getCover();
   }
 
   @override

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gamepedia/Core/Extensions/context_extensions.dart';
 import 'package:gamepedia/Models/ApiModels/game_model.dart';
-import 'package:gamepedia/Views/DetailsPage/details_page.dart';
+import 'package:gamepedia/Views/DetailsPage/View/details_page.dart';
 
 
 class HomePageGameCard extends StatelessWidget {

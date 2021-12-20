@@ -112,18 +112,12 @@ class _HomePageViewState extends State<HomePageView> {
                         scrollDirection: Axis.horizontal,
                         itemCount: _homePageViewModel.bestOfAllYearGames.length,
                         itemBuilder: (context, index) {
-                          if (index == 0 || index == _homePageViewModel.bestOfAllYearGames.length - 1) {
-                            return SizedBox(
-                              width: context.lowValue,
+                          if (_homePageViewModel.bestOfAllYearGames[index] != null) {
+                            return RecommendedGameCard(
+                              gameModel: _homePageViewModel.bestOfAllYearGames[index]!,
                             );
                           } else {
-                            if (_homePageViewModel.bestOfAllYearGames[index] != null) {
-                              return RecommendedGameCard(
-                                gameModel: _homePageViewModel.bestOfAllYearGames[index]!,
-                              );
-                            } else {
-                              return buildRecommendedCardShimmer(context);
-                            }
+                            return buildRecommendedCardShimmer(context);
                           }
                         }),
                   );

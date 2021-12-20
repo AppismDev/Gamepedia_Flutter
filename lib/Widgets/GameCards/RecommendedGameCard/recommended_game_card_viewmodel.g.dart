@@ -50,12 +50,12 @@ mixin _$RecommendedGameCardViewModel
     });
   }
 
-  final _$getScreenShootAsyncAction =
-      AsyncAction('_RecommendedGameCardViewModelBase.getScreenShoot');
+  final _$getCoverAsyncAction =
+      AsyncAction('_RecommendedGameCardViewModelBase.getCover');
 
   @override
-  Future<void> getScreenShoot() {
-    return _$getScreenShootAsyncAction.run(() => super.getScreenShoot());
+  Future<void> getCover() {
+    return _$getCoverAsyncAction.run(() => super.getCover());
   }
 
   @override
