@@ -74,6 +74,7 @@ extension PaddingExtension on BuildContext {
   EdgeInsets get paddingOnlyRightMedium => EdgeInsets.only(right: mediumValue);
   EdgeInsets get paddingOnlyRightHigh => EdgeInsets.only(right: highValue);
 
+  double get appBarHeight => AppBar().preferredSize.height;
 
 
 }

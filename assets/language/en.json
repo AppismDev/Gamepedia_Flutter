@@ -3,5 +3,12 @@
     "newReleasedPopularGames" : "New Released Popular Games",
     "bestOfYear" : "Best Of Year",
     "bestOfAllTime": "Best Of All Time"
+  },
+  "settingsPage": {
+    "privacyPolicy": "Privacy Policy",
+    "themes": "Themes",
+    "termsOfService": "Terms of Service",
+    "languages": "Languages",
+    "settings": "Settings"
   }
 }
