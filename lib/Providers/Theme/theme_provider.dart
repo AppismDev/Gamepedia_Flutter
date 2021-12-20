@@ -16,6 +16,15 @@ class ThemeProvider extends ChangeNotifier {
   ThemeData get currentTheme => _currentTheme;
   ThemeEnums get currentAppThemeEnum => _currentAppThemeEnum;
 
+
+  ThemeData get otherTheme {
+    if(currentAppThemeEnum == ThemeEnums.LIGHT_MODE){
+      return AppThemeDark.instance.theme;
+    }else{
+      return AppThemeLight.instance.theme;
+    }
+  }
+
   ThemeProvider(PreferencesKeys themePrefs){
     if(themePrefs == PreferencesKeys.DARK_THEME){
       _currentTheme = AppThemeDark.instance.theme;

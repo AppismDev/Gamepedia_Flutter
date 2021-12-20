@@ -16,12 +16,37 @@ abstract class _HomePageViewModelBase with Store {
   @observable
   ObservableList<GameModel?> bestOfAllYearGames = ObservableList();
 
+  @observable
+  ObservableList<GameModel?> bestOfLastMonths = ObservableList();
+
+  @observable
+  ObservableList<GameModel?> bestOfLastYear = ObservableList();
+
+
   @action
   Future<void> getBestOfAllYearGames() async{
     List<GameModel?>? games;
     games = await _apiService.getBestOfAllTime();
     if (games == null) return null;
     bestOfAllYearGames.addAll(games);
+  }
+
+
+  @action
+  Future<void> getBestOfLastMonths() async{
+    List<GameModel?>? games;
+    games = await _apiService.getBestOfLastMonths();
+    if (games == null) return null;
+    bestOfLastMonths.addAll(games);
+  }
+
+
+  @action
+  Future<void> getBestOfLastYear() async{
+    List<GameModel?>? games;
+    games = await _apiService.getBestOfLastYear();
+    if (games == null) return null;
+    bestOfLastYear.addAll(games);
   }
 
 

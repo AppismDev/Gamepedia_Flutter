@@ -25,6 +25,38 @@ mixin _$HomePageViewModel on _HomePageViewModelBase, Store {
     });
   }
 
+  final _$bestOfLastMonthsAtom =
+      Atom(name: '_HomePageViewModelBase.bestOfLastMonths');
+
+  @override
+  ObservableList<GameModel?> get bestOfLastMonths {
+    _$bestOfLastMonthsAtom.reportRead();
+    return super.bestOfLastMonths;
+  }
+
+  @override
+  set bestOfLastMonths(ObservableList<GameModel?> value) {
+    _$bestOfLastMonthsAtom.reportWrite(value, super.bestOfLastMonths, () {
+      super.bestOfLastMonths = value;
+    });
+  }
+
+  final _$bestOfLastYearAtom =
+      Atom(name: '_HomePageViewModelBase.bestOfLastYear');
+
+  @override
+  ObservableList<GameModel?> get bestOfLastYear {
+    _$bestOfLastYearAtom.reportRead();
+    return super.bestOfLastYear;
+  }
+
+  @override
+  set bestOfLastYear(ObservableList<GameModel?> value) {
+    _$bestOfLastYearAtom.reportWrite(value, super.bestOfLastYear, () {
+      super.bestOfLastYear = value;
+    });
+  }
+
   final _$getBestOfAllYearGamesAsyncAction =
       AsyncAction('_HomePageViewModelBase.getBestOfAllYearGames');
 
@@ -34,10 +66,29 @@ mixin _$HomePageViewModel on _HomePageViewModelBase, Store {
         .run(() => super.getBestOfAllYearGames());
   }
 
+  final _$getBestOfLastMonthsAsyncAction =
+      AsyncAction('_HomePageViewModelBase.getBestOfLastMonths');
+
+  @override
+  Future<void> getBestOfLastMonths() {
+    return _$getBestOfLastMonthsAsyncAction
+        .run(() => super.getBestOfLastMonths());
+  }
+
+  final _$getBestOfLastYearAsyncAction =
+      AsyncAction('_HomePageViewModelBase.getBestOfLastYear');
+
+  @override
+  Future<void> getBestOfLastYear() {
+    return _$getBestOfLastYearAsyncAction.run(() => super.getBestOfLastYear());
+  }
+
   @override
   String toString() {
     return '''
-bestOfAllYearGames: ${bestOfAllYearGames}
+bestOfAllYearGames: ${bestOfAllYearGames},
+bestOfLastMonths: ${bestOfLastMonths},
+bestOfLastYear: ${bestOfLastYear}
     ''';
   }
 }
