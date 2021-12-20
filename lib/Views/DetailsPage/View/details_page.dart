@@ -24,13 +24,13 @@ class GameDetailsPage extends StatefulWidget {
   State<GameDetailsPage> createState() => _GameDetailsPageState();
 }
 
+//TODO appbar animation add
 class _GameDetailsPageState extends State<GameDetailsPage> {
   DetailsPageViewModel _viewModel = DetailsPageViewModel();
   AppConstants _appConstants = AppConstants.instance;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _viewModel.init(widget.gameModel);
     _viewModel.getCover();
@@ -40,7 +40,6 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBodyBehindAppBar: true,
       appBar: buildAppBar(),
       body: buildSizedBox(context, widget.gameModel),
     );
@@ -61,32 +60,34 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
             } else {
               if (_viewModel.gameCoverModel != null) {
                 return Container(
-                  height: context.safeScreenHeight / 2.1,
+                  height: (context.safeScreenHeight / 2.1) - context.appBarHeight,
                   child: Stack(
                     alignment: Alignment.topCenter,
                     children: [
                       ClipPath(
                         clipper: ProfileClipper(),
+                        clipBehavior: Clip.antiAlias,
                         child: Container(
                           decoration: BoxDecoration(
                               // boxShadow: BoxShadow
                               ),
                           width: context.screenWidth,
-                          height: context.safeScreenHeight / 2.1,
-                          child: CachedNetworkImage(
-                            imageUrl:
-                                "${_appConstants.getImageUrl(_viewModel.gameCoverModel!.imageId!, ImageSize.SCREENSHOT_HUGE)}",
-                            fit: BoxFit.contain,
-                            imageBuilder: (context, imageProvider) => Container(
-                              child: ClipRRect(
-                                child: Container(
-                                  decoration: BoxDecoration(color: Colors.white.withOpacity(0.0)),
+                          height: (context.safeScreenHeight / 2.1) - context.appBarHeight,
+                          child: Align(
+                            child: CachedNetworkImage(
+                              imageUrl:
+                                  "${_appConstants.getImageUrl(_viewModel.gameCoverModel!.imageId!, ImageSize.SCREENSHOT_HUGE)}",
+                              imageBuilder: (context, imageProvider) => Container(
+                                child: ClipRRect(
+                                  child: Container(
+                                    decoration: BoxDecoration(color: Colors.white.withOpacity(0.0)),
+                                  ),
                                 ),
-                              ),
-                              decoration: BoxDecoration(
-                                image: DecorationImage(
-                                  image: imageProvider,
-                                  fit: BoxFit.fill,
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: imageProvider,
+                                    fit: BoxFit.fill,
+                                  ),
                                 ),
                               ),
                             ),
@@ -95,7 +96,7 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
                       ),
                       Positioned(
                         // bottom: context.screenHeight / 23,
-                        top: context.safeScreenHeight / 2.64,
+                        top: (context.safeScreenHeight / 2.64) - context.appBarHeight,
                         child: ElevatedButton(
                           onPressed: () {},
                           child: Icon(
@@ -118,7 +119,7 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
             }
           }),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: context.dynamicHeight(0.1)),
+            padding: EdgeInsets.only(right: context.dynamicWidth(0.1), left: context.dynamicWidth(0.1), top: context.lowValue),
             child: Text(
               "${gameModel.name}",
               textAlign: TextAlign.center,
@@ -220,8 +221,12 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
-                        padding: EdgeInsets.only(left: context.mediumValue, bottom: context.lowValue, top:  context.mediumValue),
-                        child: Text("Screenshots", style: context.textTheme.headline6,),
+                        padding: EdgeInsets.only(
+                            left: context.mediumValue, bottom: context.lowValue, top: context.mediumValue),
+                        child: Text(
+                          "Screenshots",
+                          style: context.textTheme.headline6,
+                        ),
                       ),
                       Container(
                         height: context.dynamicHeight(0.18),
@@ -257,7 +262,6 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
                   return SizedBox();
                 }
               } else {
-
                 return Column(
                   children: [
                     Container(
@@ -318,7 +322,7 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
               // boxShadow: BoxShadow
               ),
           width: context.screenWidth,
-          height: context.safeScreenHeight / 2.1,
+          height: (context.safeScreenHeight / 2.1) - AppBar().preferredSize.height,
         ),
       ),
       baseColor: context.currentAppThemeEnum == ThemeEnums.DARK_MODE ? Colors.grey.shade900 : Colors.grey.shade300,
@@ -330,7 +334,6 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
     return AppBar(
       centerTitle: true,
       actions: [IconButton(onPressed: () {}, icon: Icon(Icons.search))],
-      backgroundColor: Colors.transparent,
       title: GamepediaLogo(
         size: 18,
       ),

@@ -16,15 +16,16 @@ class AppThemeDark implements IAppTheme {
   ThemeData get theme => ThemeData(
         colorScheme: ColorScheme.fromSwatch(brightness: Brightness.dark).copyWith(secondary: Colors.red),
         primaryColor: Colors.black,
-        brightness: Brightness.dark,
         shadowColor: const Color(0xFF141414),
         backgroundColor: const Color(0xFF212121),
         dividerColor: Colors.black12,
         iconTheme: IconThemeData(color: Colors.white),
         primaryIconTheme: IconThemeData(color: Color(0xffE50914)),
+        scaffoldBackgroundColor: Colors.grey[850],
         appBarTheme: AppBarTheme(
           elevation: 0,
           centerTitle: true,
+          backgroundColor: Colors.grey[850],
           titleTextStyle: GoogleFonts.montserrat(fontSize: 14),
         ),
         snackBarTheme: SnackBarThemeData(

@@ -13,6 +13,7 @@ import 'package:gamepedia/Providers/Language/language_provider.dart';
 import 'package:gamepedia/Providers/Theme/theme_provider.dart';
 import 'package:gamepedia/Views/HomePage/ViewModel/home_page_viewmodel.dart';
 import 'package:gamepedia/Widgets/GameCards/GameCard/game_card.dart';
+import 'package:gamepedia/Views/SettingsPage/settings_view.dart';
 import 'package:gamepedia/Widgets/GameCards/RecommendedGameCard/recommended_game_card.dart';
 import 'package:gamepedia/Widgets/Logo/gamepedia_logo.dart';
 import 'package:provider/provider.dart';
@@ -53,24 +54,15 @@ class _HomePageViewState extends State<HomePageView> {
         children: [
           ListTile(
             title: Text(
-              "English",
+              "Ayarlar",
             ),
-            onTap: () async {
-              await Provider.of<LanguageProvider>(context, listen: false)
-                  .setCurrentLocale(LanguageManager.instance.enLocale, context);
-              Navigator.pop(context);
+            onTap: () {
+
+              MaterialPageRoute route = MaterialPageRoute(builder: (context) => SettingsView());
+              Navigator.of(context).push(route);
             },
           ),
-          ListTile(
-            onTap: () async {
-              await Provider.of<LanguageProvider>(context, listen: false)
-                  .setCurrentLocale(LanguageManager.instance.trLocale, context);
-              Navigator.pop(context);
-            },
-            title: Text(
-              "Türkçe",
-            ),
-          )
+
         ],
       ),
     );

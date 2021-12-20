@@ -9,6 +9,7 @@ class AppConstants {
 
 
   String get LANG_ASSET_PATH => 'assets/language';
+  String get ICON_ASSET_PATH => 'assets/icons/';
 
 
   // API URLs

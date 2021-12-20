@@ -3,6 +3,12 @@
     "newReleasedPopularGames" : "Yeni Çıkmış Popüler Oyunlar",
     "bestOfYear" : "Yılın En İyileri",
     "bestOfAllTime": "Tüm Zamanların En İyileri"
-
+  },
+  "settingsPage": {
+    "privacyPolicy": "Gizlilik Politikası",
+    "themes": "Temalar",
+    "termsOfService": "Kullanım Şartları",
+    "languages": "Diller",
+    "settings": "Ayarlar"
   }
 }
