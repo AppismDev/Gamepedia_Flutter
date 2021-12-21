@@ -3,6 +3,7 @@
 import 'package:gamepedia/Models/ApiModels/artwork_model.dart';
 import 'package:gamepedia/Models/ApiModels/cover_model.dart';
 import 'package:gamepedia/Models/ApiModels/game_model.dart';
+import 'package:gamepedia/Models/ApiModels/genre_lite_model.dart';
 import 'package:gamepedia/Models/ApiModels/screenshot_model.dart';
 import 'package:gamepedia/Models/ApiModels/token_info.dart';
 
@@ -17,6 +18,8 @@ abstract class IApiService{
   Future<List<GameModel>?> getBestOfLastMonths({int? page});
   Future<List<GameModel>?> getBestOfLastYear({int? page});
 
+  // Genres Route
+  Future<List<GenreLiteModel>?> getAllGenres();
 
   // Cover Route
   Future<List<CoverModel>?> getCover(String idString);

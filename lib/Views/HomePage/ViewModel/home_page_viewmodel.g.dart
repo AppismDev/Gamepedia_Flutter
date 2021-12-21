@@ -57,6 +57,21 @@ mixin _$HomePageViewModel on _HomePageViewModelBase, Store {
     });
   }
 
+  final _$allGenresAtom = Atom(name: '_HomePageViewModelBase.allGenres');
+
+  @override
+  ObservableList<GenreLiteModel?> get allGenres {
+    _$allGenresAtom.reportRead();
+    return super.allGenres;
+  }
+
+  @override
+  set allGenres(ObservableList<GenreLiteModel?> value) {
+    _$allGenresAtom.reportWrite(value, super.allGenres, () {
+      super.allGenres = value;
+    });
+  }
+
   final _$getBestOfAllYearGamesAsyncAction =
       AsyncAction('_HomePageViewModelBase.getBestOfAllYearGames');
 
@@ -83,12 +98,21 @@ mixin _$HomePageViewModel on _HomePageViewModelBase, Store {
     return _$getBestOfLastYearAsyncAction.run(() => super.getBestOfLastYear());
   }
 
+  final _$getAllGenresAsyncAction =
+      AsyncAction('_HomePageViewModelBase.getAllGenres');
+
+  @override
+  Future<void> getAllGenres() {
+    return _$getAllGenresAsyncAction.run(() => super.getAllGenres());
+  }
+
   @override
   String toString() {
     return '''
 bestOfAllYearGames: ${bestOfAllYearGames},
 bestOfLastMonths: ${bestOfLastMonths},
-bestOfLastYear: ${bestOfLastYear}
+bestOfLastYear: ${bestOfLastYear},
+allGenres: ${allGenres}
     ''';
   }
 }

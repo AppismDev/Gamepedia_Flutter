@@ -1,4 +1,5 @@
 import 'package:gamepedia/Models/ApiModels/game_model.dart';
+import 'package:gamepedia/Models/ApiModels/genre_lite_model.dart';
 import 'package:gamepedia/Services/ApiService/api_service.dart';
 import 'package:mobx/mobx.dart';
 
@@ -22,6 +23,8 @@ abstract class _HomePageViewModelBase with Store {
   @observable
   ObservableList<GameModel?> bestOfLastYear = ObservableList();
 
+  @observable
+  ObservableList<GenreLiteModel?> allGenres = ObservableList();
 
   @action
   Future<void> getBestOfAllYearGames() async{
@@ -50,6 +53,13 @@ abstract class _HomePageViewModelBase with Store {
   }
 
 
+  @action
+  Future<void> getAllGenres() async{
+    List<GenreLiteModel?>? genres;
+    genres = await _apiService.getAllGenres();
+    if (genres == null) return null;
+    allGenres.addAll(genres);
+  }
 
 
 }

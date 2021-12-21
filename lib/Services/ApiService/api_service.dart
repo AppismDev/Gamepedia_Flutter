@@ -4,6 +4,7 @@ import 'package:gamepedia/Core/Constans/Application/app_constants.dart';
 import 'package:gamepedia/Models/ApiModels/artwork_model.dart';
 import 'package:gamepedia/Models/ApiModels/cover_model.dart';
 import 'package:gamepedia/Models/ApiModels/game_model.dart';
+import 'package:gamepedia/Models/ApiModels/genre_lite_model.dart';
 import 'package:gamepedia/Models/ApiModels/screenshot_model.dart';
 import 'package:gamepedia/Models/ApiModels/token_info.dart';
 import 'package:gamepedia/Services/ApiService/i_api_service.dart';
@@ -145,6 +146,38 @@ class ApiService extends IApiService {
   }
 
 
+  @override
+  Future<List<GenreLiteModel>?> getAllGenres() async{
+    try {
+
+      Uri url = Uri.parse(_appConstants.GENRES_ENDPOINT+'/allGenres');
+
+      if (accessToken == null) {
+        throw Exception("Token Not be Null");
+      }
+
+      Map<String, String> headers = {'Authorization': 'token=' + accessToken!};
+
+      http.Response response = await http.get(url, headers: headers);
+
+      if (response.statusCode == 200) {
+        List<GenreLiteModel> genres = [];
+        List body = jsonDecode(response.body);
+        body.forEach((gameElement) {
+          genres.add(GenreLiteModel.fromJson(gameElement));
+        });
+        return genres;
+      } else {
+        print("[HATA] [ApiService] [getAllGenres] --> " + response.statusCode.toString());
+        print(response.body);
+        return null;
+      }
+    } catch (e) {
+      print("[HATA] [ApiService] [getAllGenres] --> " + e.toString());
+      return null;
+    }
+  }
+
 
 
   @override
@@ -243,6 +276,7 @@ class ApiService extends IApiService {
       return null;
     }
   }
+
 
 
 

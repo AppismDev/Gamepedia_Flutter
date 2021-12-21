@@ -47,8 +47,8 @@ class _GameCardState extends State<GameCard> {
             Stack(
               children: [
                 CachedNetworkImage(
-                  width: 150,
-                  height: 150,
+                  width: 144,
+                  height: 160,
                   imageUrl: "${_appConstants.getImageUrl(widget.gameModel.cover!.imageId!, ImageSize.COVER_BIG)}",
                   imageBuilder: (context, imageProvider) =>
                       Container(
