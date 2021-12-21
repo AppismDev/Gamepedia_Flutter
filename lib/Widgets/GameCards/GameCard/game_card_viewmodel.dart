@@ -18,28 +18,5 @@ abstract class _GameCardViewModelBase with Store{
   }
 
 
-  @observable
-  bool _loadingImage = true;
-
-  @computed
-  bool get loadingImage => _loadingImage;
-
-  @observable
-  CoverModel? gameCoverModel;
-
-
-  @action
-  Future<void> getCover() async {
-    _loadingImage = true;
-
-    if (_gameModel.id == null) return;
-
-    List<CoverModel> coverList = await _apiService.getCover(_gameModel.cover!.toString()) ?? [];
-    if (coverList.isEmpty) return;
-
-    gameCoverModel = coverList.first;
-    _loadingImage = false;
-  }
-
 
 }

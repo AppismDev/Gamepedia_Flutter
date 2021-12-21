@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:gamepedia/Core/Constans/Application/app_constants.dart';
 import 'package:gamepedia/Core/Constans/Enums/image_enums.dart';
 import 'package:gamepedia/Core/Constans/Enums/theme_enums.dart';
@@ -33,7 +32,6 @@ class _RecommendedGameCardState extends State<RecommendedGameCard> {
   void initState() {
     super.initState();
     _viewModel.init(widget.gameModel);
-    _viewModel.getCover();
   }
 
   @override
@@ -56,45 +54,31 @@ class _RecommendedGameCardState extends State<RecommendedGameCard> {
               elevation: 2,
               child: Stack(
                 children: [
-                  Observer(builder: (_) {
-                    if (_viewModel.loadingImage) {
-                      return Positioned.fill(
-                        child: buildShimmer(context),
-                      );
-                    } else {
-                      if (_viewModel.gameCoverModel != null) {
-                        return CachedNetworkImage(
-                          width: widget.width,
-                          height: widget.height,
-                          imageUrl:
-                              "${_appConstants.getImageUrl(_viewModel.gameCoverModel!.imageId!, ImageSize.SCREENSHOT_HUGE)}",
-                          imageBuilder: (context, imageProvider) => Container(
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(widget.radius),
-                              child: new Container(
-                                decoration: new BoxDecoration(color: Colors.white.withOpacity(0.0)),
-                              ),
-                            ),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(widget.radius),
-                              image: DecorationImage(
-                                image: imageProvider,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                          placeholder: (c, url) {
-                            return Center(child: GamepediaLogo(size: 22));
-                          },
-                          errorWidget: (context, url, error) => Icon(Icons.error),
-                        );
-                      } else {
-                        return Positioned.fill(
-                          child: buildShimmer(context),
-                        );
-                      }
-                    }
-                  }),
+                  CachedNetworkImage(
+                    width: widget.width,
+                    height: widget.height,
+                    imageUrl:
+                        "${_appConstants.getImageUrl(widget.gameModel.cover!.imageId!, ImageSize.SCREENSHOT_HUGE)}",
+                    imageBuilder: (context, imageProvider) => Container(
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(widget.radius),
+                        child: new Container(
+                          decoration: new BoxDecoration(color: Colors.white.withOpacity(0.0)),
+                        ),
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(widget.radius),
+                        image: DecorationImage(
+                          image: imageProvider,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                    placeholder: (c, url) {
+                      return Center(child: GamepediaLogo(size: 22));
+                    },
+                    errorWidget: (context, url, error) => Icon(Icons.error),
+                  ),
                   Align(
                     alignment: Alignment.bottomLeft,
                     child: Padding(
@@ -106,16 +90,13 @@ class _RecommendedGameCardState extends State<RecommendedGameCard> {
                           child: Text(
                             "${widget.gameModel.name}",
                             style: GoogleFonts.fredokaOne(
-                              fontWeight: FontWeight.w700,
-                              fontSize: context.textTheme.headline6!.fontSize,
-                              color: Colors.grey.shade100
-                            ),
+                                fontWeight: FontWeight.w700,
+                                fontSize: context.textTheme.headline6!.fontSize,
+                                color: Colors.grey.shade100),
                           ),
                         ),
-                        decoration: BoxDecoration(
-                          color: Colors.black54,
-                          borderRadius: BorderRadius.circular(widget.radius)
-                        ),
+                        decoration:
+                            BoxDecoration(color: Colors.black54, borderRadius: BorderRadius.circular(widget.radius)),
                       ),
                     ),
                   ),

@@ -34,7 +34,7 @@ class _HomePageViewState extends State<HomePageView> {
     super.initState();
     _homePageViewModel.getBestOfAllYearGames();
     _homePageViewModel.getBestOfLastMonths();
-    _homePageViewModel.getBestOfAllYearGames();
+    _homePageViewModel.getBestOfLastYear();
   }
 
   @override
@@ -57,7 +57,6 @@ class _HomePageViewState extends State<HomePageView> {
               "Ayarlar",
             ),
             onTap: () {
-
               MaterialPageRoute route = MaterialPageRoute(builder: (context) => SettingsView());
               Navigator.of(context).push(route);
             },

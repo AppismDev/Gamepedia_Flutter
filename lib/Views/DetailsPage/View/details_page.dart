@@ -33,8 +33,6 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
   void initState() {
     super.initState();
     _viewModel.init(widget.gameModel);
-    _viewModel.getCover();
-    _viewModel.getScreenshot();
   }
 
   @override
@@ -54,70 +52,60 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Observer(builder: (_) {
-            if (_viewModel.loadingImage) {
-              return buildShimmer(context);
-            } else {
-              if (_viewModel.gameCoverModel != null) {
-                return Container(
-                  height: (context.safeScreenHeight / 2.1) - context.appBarHeight,
-                  child: Stack(
-                    alignment: Alignment.topCenter,
-                    children: [
-                      ClipPath(
-                        clipper: ProfileClipper(),
-                        clipBehavior: Clip.antiAlias,
-                        child: Container(
+          Container(
+            height: (context.safeScreenHeight / 2.1) - context.appBarHeight,
+            child: Stack(
+              alignment: Alignment.topCenter,
+              children: [
+                ClipPath(
+                  clipper: ProfileClipper(),
+                  clipBehavior: Clip.antiAlias,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      // boxShadow: BoxShadow
+                    ),
+                    width: context.screenWidth,
+                    height: (context.safeScreenHeight / 2.1) - context.appBarHeight,
+                    child: Align(
+                      child: CachedNetworkImage(
+                        imageUrl:
+                        "${_appConstants.getImageUrl(widget.gameModel.cover!.imageId!, ImageSize.SCREENSHOT_HUGE)}",
+                        imageBuilder: (context, imageProvider) => Container(
+                          child: ClipRRect(
+                            child: Container(
+                              decoration: BoxDecoration(color: Colors.white.withOpacity(0.0)),
+                            ),
+                          ),
                           decoration: BoxDecoration(
-                              // boxShadow: BoxShadow
-                              ),
-                          width: context.screenWidth,
-                          height: (context.safeScreenHeight / 2.1) - context.appBarHeight,
-                          child: Align(
-                            child: CachedNetworkImage(
-                              imageUrl:
-                                  "${_appConstants.getImageUrl(_viewModel.gameCoverModel!.imageId!, ImageSize.SCREENSHOT_HUGE)}",
-                              imageBuilder: (context, imageProvider) => Container(
-                                child: ClipRRect(
-                                  child: Container(
-                                    decoration: BoxDecoration(color: Colors.white.withOpacity(0.0)),
-                                  ),
-                                ),
-                                decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                    image: imageProvider,
-                                    fit: BoxFit.fill,
-                                  ),
-                                ),
-                              ),
+                            image: DecorationImage(
+                              image: imageProvider,
+                              fit: BoxFit.fill,
                             ),
                           ),
                         ),
                       ),
-                      Positioned(
-                        // bottom: context.screenHeight / 23,
-                        top: (context.safeScreenHeight / 2.64) - context.appBarHeight,
-                        child: ElevatedButton(
-                          onPressed: () {},
-                          child: Icon(
-                            FontAwesome5Solid.play,
-                            color: context.theme.primaryColor,
-                          ),
-                          style: ButtonStyle(
-                            shape: MaterialStateProperty.all(CircleBorder()),
-                            padding: MaterialStateProperty.all(context.paddingAllMedium),
-                            backgroundColor: MaterialStateProperty.all(Colors.white),
-                          ),
-                        ),
-                      )
-                    ],
+                    ),
                   ),
-                );
-              } else {
-                return buildShimmer(context);
-              }
-            }
-          }),
+                ),
+                Positioned(
+                  // bottom: context.screenHeight / 23,
+                  top: (context.safeScreenHeight / 2.64) - context.appBarHeight,
+                  child: ElevatedButton(
+                    onPressed: () {},
+                    child: Icon(
+                      FontAwesome5Solid.play,
+                      color: context.theme.primaryColor,
+                    ),
+                    style: ButtonStyle(
+                      shape: MaterialStateProperty.all(CircleBorder()),
+                      padding: MaterialStateProperty.all(context.paddingAllMedium),
+                      backgroundColor: MaterialStateProperty.all(Colors.white),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
           Padding(
             padding: EdgeInsets.only(right: context.dynamicWidth(0.1), left: context.dynamicWidth(0.1), top: context.lowValue),
             child: Text(
@@ -213,79 +201,46 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
               textAlign: TextAlign.center,
             ),
           ),
-          Observer(
-            builder: (context) {
-              if (!_viewModel.loadingImage) {
-                if (_viewModel.screenshotsModels != null && _viewModel.screenshotsModels!.length > 0) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+          Padding(
+            padding: EdgeInsets.only(
+                left: context.mediumValue, bottom: context.lowValue, top: context.mediumValue),
+            child: Text(
+              "Screenshots",
+              style: context.textTheme.headline6,
+            ),
+          ),
+          if(gameModel.screenshots != null)
+            Container(
+            height: context.dynamicHeight(0.18),
+            child: ListView.builder(
+              physics: BouncingScrollPhysics(),
+              cacheExtent: context.screenWidth * 4,
+              scrollDirection: Axis.horizontal,
+              itemCount: gameModel.screenshots!.length,
+              itemBuilder: (context, index) {
+                if (index == 0) {
+                  return Row(
                     children: [
-                      Padding(
-                        padding: EdgeInsets.only(
-                            left: context.mediumValue, bottom: context.lowValue, top: context.mediumValue),
-                        child: Text(
-                          "Screenshots",
-                          style: context.textTheme.headline6,
-                        ),
-                      ),
-                      Container(
-                        height: context.dynamicHeight(0.18),
-                        child: ListView.builder(
-                          physics: BouncingScrollPhysics(),
-                          cacheExtent: context.screenWidth * 4,
-                          scrollDirection: Axis.horizontal,
-                          itemCount: _viewModel.screenshotsModels?.length,
-                          itemBuilder: (context, index) {
-                            if (index == 0) {
-                              return Row(
-                                children: [
-                                  SizedBox(width: context.mediumValue),
-                                  buildScreenshotCard(index),
-                                ],
-                              );
-                            } else if (index == _viewModel.screenshotsModels!.length - 1) {
-                              return Row(
-                                children: [
-                                  buildScreenshotCard(index),
-                                  SizedBox(width: context.mediumValue),
-                                ],
-                              );
-                            } else {
-                              return buildScreenshotCard(index);
-                            }
-                          },
-                        ),
-                      ),
+                      SizedBox(width: context.mediumValue),
+                      buildScreenshotCard(index),
+                    ],
+                  );
+                } else if (index == gameModel.screenshots!.length - 1) {
+                  return Row(
+                    children: [
+                      buildScreenshotCard(index),
+                      SizedBox(width: context.mediumValue),
                     ],
                   );
                 } else {
-                  return SizedBox();
+                  return buildScreenshotCard(index);
                 }
-              } else {
-                return Column(
-                  children: [
-                    Container(
-                        height: context.dynamicHeight(0.18),
-                        margin: context.paddingOnlyTopMedium,
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          physics: BouncingScrollPhysics(),
-                          itemBuilder: (context, index) {
-                            if (index == 0 || index == 7) {
-                              return SizedBox(
-                                width: context.lowValue,
-                              );
-                            } else {
-                              return screenshotShimmer();
-                            }
-                          },
-                          itemCount: 8,
-                        )),
-                  ],
-                );
-              }
-            },
-          ),
+              },
+            ),
+          )
+          else
+            // TODO : (AHMET) Ekran Görüntüsü olmayan oyunlar için arayüz düzenlemesi
+            Text("Ekran Görüntüsü Yok"),
           SizedBox(
             height: 30,
           )
@@ -304,7 +259,7 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
         borderRadius: BorderRadius.circular(12),
         child: CachedNetworkImage(
           imageUrl: _appConstants.getImageUrl(
-            _viewModel.screenshotsModels![index].imageId!,
+            widget.gameModel.screenshots![index]!.imageId!,
             ImageSize.SCREENSHOT_MED,
           ),
           fit: BoxFit.fill,

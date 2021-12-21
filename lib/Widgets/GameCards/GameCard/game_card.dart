@@ -29,7 +29,6 @@ class _GameCardState extends State<GameCard> {
   void initState() {
     super.initState();
     _viewModel.init(widget.gameModel);
-    _viewModel.getCover();
   }
 
   @override
@@ -45,90 +44,77 @@ class _GameCardState extends State<GameCard> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         child: Column(
           children: [
-            Observer(builder: (_) {
-              if(_viewModel.gameCoverModel == null){
-                return Container(
-                    width: 150,
-                    height: 120,
-                    child: Center(
-                      child: CircularProgressIndicator(),
-                    )
-                );
-              }else{
-                return Stack(
-                  children: [
-                    CachedNetworkImage(
-                      width: 150,
-                      height: 150,
-                      imageUrl: "${_appConstants.getImageUrl(_viewModel.gameCoverModel!.imageId!, ImageSize.COVER_BIG)}",
-                      imageBuilder: (context, imageProvider) =>
-                          Container(
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
-                              child: new Container(
-                                decoration: new BoxDecoration(color: Colors.white.withOpacity(0.0)),
-                              ),
-                            ),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              image: DecorationImage(
-                                image: imageProvider,
-                                fit: BoxFit.fill,
-                              ),
-                            ),
-                          ),
-                      progressIndicatorBuilder: (context,string,downloadProgress){
-                        return Container(
-                            width: 120,
-                            height: 100,
-                            child: Center(
-                              child: CircularProgressIndicator(),
-                            )
-                        );
-                      },
-                      errorWidget: (context, url, error) => Icon(Icons.error),
-                    ),
-                    Positioned(
-                      right: 0,
-                      bottom:10,
-                      child: Container(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8,vertical: 2),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                AntDesign.star,
-                                size: 14,
-                                color: Colors.amber,
-                              ),
-                              SizedBox(width: 4),
-                              Text(
-                                "${widget.gameModel.totalRating?.toInt()} / 100",
-                                style: GoogleFonts.montserrat(
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.w500,
-                                    color: context.otherTheme.textTheme.bodyText1!.color
-                                ),
-                              )
-                            ],
+            Stack(
+              children: [
+                CachedNetworkImage(
+                  width: 150,
+                  height: 150,
+                  imageUrl: "${_appConstants.getImageUrl(widget.gameModel.cover!.imageId!, ImageSize.COVER_BIG)}",
+                  imageBuilder: (context, imageProvider) =>
+                      Container(
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: new Container(
+                            decoration: new BoxDecoration(color: Colors.white.withOpacity(0.0)),
                           ),
                         ),
                         decoration: BoxDecoration(
-                            color: context.otherTheme.cardColor.withOpacity(0.9),
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(12),
-                              bottomLeft: Radius.circular(12),
-                            )
+                          borderRadius: BorderRadius.circular(10),
+                          image: DecorationImage(
+                            image: imageProvider,
+                            fit: BoxFit.fill,
+                          ),
                         ),
                       ),
-                    )
-                  ],
-                );
-              }
-
-            }),
+                  progressIndicatorBuilder: (context,string,downloadProgress){
+                    return Container(
+                        width: 120,
+                        height: 100,
+                        child: Center(
+                          child: CircularProgressIndicator(),
+                        )
+                    );
+                  },
+                  errorWidget: (context, url, error) => Icon(Icons.error),
+                ),
+                Positioned(
+                  right: 0,
+                  bottom:10,
+                  child: Container(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8,vertical: 2),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            AntDesign.star,
+                            size: 14,
+                            color: Colors.amber,
+                          ),
+                          SizedBox(width: 4),
+                          Text(
+                            "${widget.gameModel.totalRating?.toInt()} / 100",
+                            style: GoogleFonts.montserrat(
+                                fontSize: 10,
+                                fontWeight: FontWeight.w500,
+                                color: context.otherTheme.textTheme.bodyText1!.color
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    decoration: BoxDecoration(
+                        color: context.otherTheme.cardColor.withOpacity(0.9),
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(12),
+                          bottomLeft: Radius.circular(12),
+                        )
+                    ),
+                  ),
+                )
+              ],
+            ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 4,horizontal: 2),
               child: Container(
