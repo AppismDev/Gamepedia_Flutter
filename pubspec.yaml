@@ -46,6 +46,7 @@ dependencies:
   flutter_vector_icons: ^1.0.0
   shimmer: ^2.0.0
   cached_network_image: ^3.2.0
+  youtube_player_flutter: ^8.0.0
 
 
 dev_dependencies:

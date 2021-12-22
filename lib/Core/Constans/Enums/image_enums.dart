@@ -10,5 +10,4 @@ enum ImageSize{
   SCREENSHOT_HUGE,
   P720,
   P1080
-
 }
