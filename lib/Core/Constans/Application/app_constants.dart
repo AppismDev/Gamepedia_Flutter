@@ -10,7 +10,8 @@ class AppConstants {
 
   String get LANG_ASSET_PATH => 'assets/language';
   String get ICON_ASSET_PATH => 'assets/icons/';
-
+  String get YOUTUBE_VIDEO_URL => "https://www.youtube.com/watch?v=";
+  String get YOUTUBE_VIDEO_THUMBNAIL_URL => "https://img.youtube.com/vi";
 
   // API URLs
   String get API_BASE_URL => dotenv.env['API_BASE_URL']!;
@@ -32,5 +33,6 @@ class AppConstants {
   String getScreenshotsUrl(String idString) => SCREENSHOTS_ENDPOINT + "/$idString";
   String getArtworksUrl(String idString) => ARTWORKS_ENDPOINT + "/$idString";
   String getImageUrl(String hash,ImageSize size) => IMAGE_UPLOADS_URL + "/t_${size.name.toLowerCase()}/${hash}.jpg";
-
+  String getYoutubeVideoUrl(String videoID) => YOUTUBE_VIDEO_URL + "${videoID}";
+  String getYoutubeVideoThumbnailUrl(String videoID) => YOUTUBE_VIDEO_THUMBNAIL_URL + "/${videoID}/hqdefault.jpg";
 }

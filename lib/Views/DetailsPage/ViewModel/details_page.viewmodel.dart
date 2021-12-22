@@ -17,4 +17,12 @@ abstract class _DetailsPageViewModelBase with Store {
     _gameModel = gameModel;
   }
 
+  @observable
+  bool _isSeeMoreOpen = false;
+
+  @computed
+  bool get isSeeMoreOpen => _isSeeMoreOpen;
+
+  @action
+  bool setIsSeeMoreOpen(bool value) => _isSeeMoreOpen = value;
 }

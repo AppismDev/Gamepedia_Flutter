@@ -3,17 +3,21 @@ import 'dart:developer';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:gamepedia/Core/Constans/Application/app_constants.dart';
 import 'package:gamepedia/Core/Constans/Enums/image_enums.dart';
 import 'package:gamepedia/Core/Constans/Enums/theme_enums.dart';
 import 'package:gamepedia/Core/Extensions/context_extensions.dart';
+import 'package:gamepedia/Core/Extensions/string_extensions.dart';
 import 'package:gamepedia/Models/ApiModels/game_model.dart';
 import 'package:gamepedia/Views/DetailsPage/ViewModel/details_page.viewmodel.dart';
+import 'package:gamepedia/Views/VideoPage/View/video_page.dart';
 import 'package:gamepedia/Widgets/Clipper/arc_clipper.dart';
 import 'package:gamepedia/Widgets/Logo/gamepedia_logo.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class GameDetailsPage extends StatefulWidget {
   GameModel gameModel;
@@ -29,10 +33,18 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
   DetailsPageViewModel _viewModel = DetailsPageViewModel();
   AppConstants _appConstants = AppConstants.instance;
 
+  bool _isPlayerReady = false;
+
   @override
   void initState() {
     super.initState();
+
     _viewModel.init(widget.gameModel);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -62,14 +74,17 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
                   clipBehavior: Clip.antiAlias,
                   child: Container(
                     decoration: BoxDecoration(
-                      // boxShadow: BoxShadow
-                    ),
+                        // boxShadow: BoxShadow
+                        ),
                     width: context.screenWidth,
                     height: (context.safeScreenHeight / 2.1) - context.appBarHeight,
                     child: Align(
                       child: CachedNetworkImage(
+                        placeholder: (context, url) {
+                          return mainImagePlaceholder(context);
+                        },
                         imageUrl:
-                        "${_appConstants.getImageUrl(widget.gameModel.cover!.imageId!, ImageSize.SCREENSHOT_HUGE)}",
+                            "${_appConstants.getImageUrl(widget.gameModel.cover!.imageId!, ImageSize.SCREENSHOT_HUGE)}",
                         imageBuilder: (context, imageProvider) => Container(
                           child: ClipRRect(
                             child: Container(
@@ -78,9 +93,7 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
                           ),
                           decoration: BoxDecoration(
                             image: DecorationImage(
-                              image: imageProvider,
-                              fit: BoxFit.fill,
-                            ),
+                                image: imageProvider, alignment: Alignment.topCenter, fit: BoxFit.fitHeight),
                           ),
                         ),
                       ),
@@ -107,7 +120,8 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(right: context.dynamicWidth(0.1), left: context.dynamicWidth(0.1), top: context.lowValue),
+            padding: EdgeInsets.only(
+                right: context.dynamicWidth(0.1), left: context.dynamicWidth(0.1), top: context.lowValue),
             child: Text(
               "${gameModel.name}",
               textAlign: TextAlign.center,
@@ -155,7 +169,7 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
                       style: context.textTheme.subtitle2,
                     ),
                     Text(
-                      "2018",
+                      DateTime.fromMillisecondsSinceEpoch(gameModel.firstReleaseDate! * 1000).year.toString(),
                       style: context.textTheme.headline6!.copyWith(fontSize: 19),
                     ),
                   ],
@@ -166,11 +180,11 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
                 child: Column(
                   children: [
                     Text(
-                      "Country",
+                      "Rating",
                       style: context.textTheme.subtitle2,
                     ),
                     Text(
-                      "USA",
+                      "${gameModel.rating!.toInt()} / 100",
                       style: context.textTheme.headline6!.copyWith(fontSize: 19),
                     ),
                   ],
@@ -195,52 +209,192 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
           ),
           Padding(
             padding: context.paddingHorizontalHigh,
-            child: Text(
-              "${gameModel.summary}",
-              style: context.textTheme.subtitle1,
-              textAlign: TextAlign.center,
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(
-                left: context.mediumValue, bottom: context.lowValue, top: context.mediumValue),
-            child: Text(
-              "Screenshots",
-              style: context.textTheme.headline6,
-            ),
-          ),
-          if(gameModel.screenshots != null)
-            Container(
-            height: context.dynamicHeight(0.18),
-            child: ListView.builder(
-              physics: BouncingScrollPhysics(),
-              cacheExtent: context.screenWidth * 4,
-              scrollDirection: Axis.horizontal,
-              itemCount: gameModel.screenshots!.length,
-              itemBuilder: (context, index) {
-                if (index == 0) {
-                  return Row(
-                    children: [
-                      SizedBox(width: context.mediumValue),
-                      buildScreenshotCard(index),
-                    ],
-                  );
-                } else if (index == gameModel.screenshots!.length - 1) {
-                  return Row(
-                    children: [
-                      buildScreenshotCard(index),
-                      SizedBox(width: context.mediumValue),
-                    ],
+            child: Observer(
+              builder: (context) {
+                if (_viewModel.isSeeMoreOpen) {
+                  return Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(text: "${gameModel.storyline ?? gameModel.summary} "),
+                        WidgetSpan(
+                          child: InkWell(
+                            child: Text(
+                              "Daha az gör",
+                              style: context.textTheme.bodyText1!.copyWith(color: Colors.blue[800]),
+                            ),
+                            onTap: () {
+                              _viewModel.setIsSeeMoreOpen(false);
+                            },
+                          ),
+                        ),
+                        // TextSpan(
+                        //   text: 'bold',
+                        //   style: TextStyle(fontWeight: FontWeight.bold),
+                        // ),
+                      ],
+                    ),
                   );
                 } else {
-                  return buildScreenshotCard(index);
+                  return Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                            text: "${gameModel.storyline?.getLimitedText ?? gameModel.summary?.getLimitedText}... "),
+                        WidgetSpan(
+                          child: InkWell(
+                            child: Text(
+                              "devamını gör",
+                              style: context.textTheme.bodyText1!.copyWith(color: Colors.blue[800]),
+                            ),
+                            onTap: () {
+                              _viewModel.setIsSeeMoreOpen(true);
+                            },
+                          ),
+                        ),
+                        // TextSpan(
+                        //   text: 'bold',
+                        //   style: TextStyle(fontWeight: FontWeight.bold),
+                        // ),
+                      ],
+                    ),
+                  );
                 }
               },
             ),
-          )
+            // child: Text(
+            //   "${gameModel.storyline?.substring(0, 300) ?? gameModel.summary?.substring(0, 50)}",
+            //   style: context.textTheme.subtitle1,
+            //   textAlign: TextAlign.center,
+            // ),
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                // padding: const EdgeInsets.all(8.0),
+                padding: EdgeInsets.only(left: context.mediumValue, bottom: context.lowValue, top: context.lowValue),
+              ),
+              if (gameModel.platforms != null)
+                Container(
+                  height: 50,
+                  child: ListView(
+                    physics: BouncingScrollPhysics(),
+                    scrollDirection: Axis.horizontal,
+                    children: [
+                      SizedBox(
+                        width: context.lowValue,
+                      ),
+                      ListView.builder(
+                        shrinkWrap: true,
+                        scrollDirection: Axis.horizontal,
+                        itemCount: gameModel.platforms!.length,
+                        itemBuilder: (context, index) {
+                          return CachedNetworkImage(
+                            imageUrl: _appConstants.getImageUrl(
+                                gameModel.platforms![index]!.platformLogo!.imageId!, ImageSize.THUMB),
+                            imageBuilder: (context, imageProvider) {
+                              return Container(
+                                width: 60,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  image: DecorationImage(
+                                    image: imageProvider,
+                                  ),
+                                ),
+                              );
+                            },
+                            fit: BoxFit.cover,
+                          );
+                        },
+                      ),
+                      SizedBox(
+                        width: context.lowValue,
+                      ),
+                    ],
+                  ),
+                )
+              else
+                SizedBox()
+            ],
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: context.mediumValue, bottom: context.lowValue, top: context.mediumValue),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                "Screenshots",
+                style: context.textTheme.headline6,
+              ),
+            ),
+          ),
+          if (gameModel.screenshots != null)
+            Container(
+              height: context.dynamicHeight(0.18),
+              child: ListView.builder(
+                physics: BouncingScrollPhysics(),
+                cacheExtent: context.screenWidth * 4,
+                scrollDirection: Axis.horizontal,
+                itemCount: gameModel.screenshots!.length,
+                itemBuilder: (context, index) {
+                  if (index == 0) {
+                    return Row(
+                      children: [
+                        SizedBox(width: context.mediumValue),
+                        buildScreenshotCard(gameModel.screenshots![index]?.imageId),
+                      ],
+                    );
+                  } else if (index == gameModel.screenshots!.length - 1) {
+                    return Row(
+                      children: [
+                        buildScreenshotCard(gameModel.screenshots![index]?.imageId),
+                        SizedBox(width: context.mediumValue),
+                      ],
+                    );
+                  } else {
+                    return buildScreenshotCard(gameModel.screenshots![index]?.imageId);
+                  }
+                },
+              ),
+            )
           else
             // TODO : (AHMET) Ekran Görüntüsü olmayan oyunlar için arayüz düzenlemesi
             Text("Ekran Görüntüsü Yok"),
+          Padding(
+            padding: EdgeInsets.only(left: context.mediumValue, bottom: context.lowValue, top: context.mediumValue),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                "Videos",
+                style: context.textTheme.headline6,
+              ),
+            ),
+          ),
+          if (gameModel.videos != null)
+            Container(
+              height: context.dynamicHeight(0.25),
+              child: ListView.builder(
+                primary: true,
+                physics: BouncingScrollPhysics(),
+                cacheExtent: context.screenWidth * 4,
+                scrollDirection: Axis.horizontal,
+                itemCount: gameModel.videos!.length,
+                itemBuilder: (context, index) {
+                  return Row(
+                    children: [
+                      index == 0 ? SizedBox(width: context.mediumValue) : SizedBox(),
+                      buildVideoCard(gameModel.videos![index]!.videoId!),
+                      index == gameModel.videos!.length - 1 ? SizedBox(width: context.mediumValue) : SizedBox(),
+                    ],
+                  );
+                },
+              ),
+            )
+          else
+            // TODO : (AHMET) Ekran Görüntüsü olmayan oyunlar için arayüz düzenlemesi
+            Text("Ekran Görüntüsü Yok"),
+          SizedBox(
+            height: 30,
+          ),
           SizedBox(
             height: 30,
           )
@@ -249,23 +403,93 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
     );
   }
 
-  Widget buildScreenshotCard(int index) {
-    return Container(
-      margin: context.paddingAllVeryLow,
-      width: context.dynamicWidth(0.5),
-      height: context.dynamicHeight(0.18),
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(12),
-        child: CachedNetworkImage(
-          imageUrl: _appConstants.getImageUrl(
-            widget.gameModel.screenshots![index]!.imageId!,
-            ImageSize.SCREENSHOT_MED,
+  ClipPath mainImagePlaceholder(BuildContext context) {
+    return ClipPath(
+      clipper: ProfileClipper(),
+      clipBehavior: Clip.antiAlias,
+      child: Container(
+        child: ClipRRect(
+          child: Shimmer.fromColors(
+            baseColor:
+                context.currentAppThemeEnum == ThemeEnums.DARK_MODE ? Colors.grey.shade900 : Colors.grey.shade300,
+            highlightColor:
+                context.currentAppThemeEnum == ThemeEnums.DARK_MODE ? Colors.grey.shade800 : Colors.grey.shade200,
+            child: Container(
+              width: context.screenWidth,
+              height: (context.safeScreenHeight / 2.1) - context.appBarHeight,
+              decoration: BoxDecoration(
+                color: Colors.white,
+              ),
+            ),
           ),
-          fit: BoxFit.fill,
         ),
       ),
     );
+  }
+
+  Widget buildVideoCard(String videoID) {
+    if (videoID != null) {
+      return SizedBox(
+        child: Padding(
+          padding: context.paddingAllLow,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(24),
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Image.network(
+                  _appConstants.getYoutubeVideoThumbnailUrl(videoID),
+                  width: context.dynamicWidth(0.6),
+                  fit: BoxFit.cover,
+                ),
+                IconButton(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      PageRouteBuilder(
+                        opaque: false, // set to false
+                        pageBuilder: (_, __, ___) => VideoPage(
+                          videoID: videoID,
+                        ),
+                      ),
+                    );
+                  },
+                  icon: Icon(
+                    Icons.play_arrow,
+                    color: Colors.white,
+                    size: 48,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    } else {
+      return SizedBox();
+    }
+  }
+
+  Widget buildScreenshotCard(String? imageID) {
+    if (imageID != null) {
+      return Container(
+        margin: context.paddingAllVeryLow,
+        width: context.dynamicWidth(0.5),
+        height: context.dynamicHeight(0.18),
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: CachedNetworkImage(
+            imageUrl: _appConstants.getImageUrl(
+              imageID,
+              ImageSize.SCREENSHOT_MED,
+            ),
+            fit: BoxFit.fill,
+          ),
+        ),
+      );
+    } else {
+      return SizedBox();
+    }
   }
 
   Shimmer buildShimmer(BuildContext context) {

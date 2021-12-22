@@ -138,19 +138,15 @@ class _HomePageViewState extends State<HomePageView> {
                   width: context.screenWidth,
                   height: 80,
                   child: Observer(
-                    builder:(_) {
-                      if(_viewModel.allGenres.isEmpty){
-                        return Container(
-                          width: context.screenWidth,
-                          height: 40,
-                          color: Colors.grey,
-                        );
-                      }else {
+                    builder: (_) {
+                      if (_viewModel.allGenres.isEmpty) {
+                        return buildGenresShimmer();
+                      } else {
                         return ListView.separated(
                             physics: BouncingScrollPhysics(),
                             scrollDirection: Axis.horizontal,
                             itemCount: _viewModel.allGenres.length + 2,
-                            separatorBuilder: (c,i)=>SizedBox(width: context.veryLowValue),
+                            separatorBuilder: (c, i) => SizedBox(width: context.veryLowValue),
                             itemBuilder: (context, index) {
                               if (index == 0 || index == _viewModel.allGenres.length + 1) {
                                 return SizedBox(
@@ -158,7 +154,9 @@ class _HomePageViewState extends State<HomePageView> {
                                 );
                               } else {
                                 return Align(
-                                  child: GenreLiteCard(genreLiteModel: _viewModel.allGenres[index - 1]!,),
+                                  child: GenreLiteCard(
+                                    genreLiteModel: _viewModel.allGenres[index - 1]!,
+                                  ),
                                 );
                               }
                             });
@@ -216,7 +214,7 @@ class _HomePageViewState extends State<HomePageView> {
                               }
                             });
                       } else {
-                        return buildGameCardShimmer(context);
+                        return buildGameCardShimmer();
                       }
                     },
                   ),
@@ -266,7 +264,8 @@ class _HomePageViewState extends State<HomePageView> {
                               }
                             });
                       } else {
-                        return buildGameCardShimmer(context);
+                        // TODO TODO TODO ASDAWESEFGAWSDQWEQWE
+                        return buildGameCardShimmer();
                       }
                     },
                   ),
@@ -310,14 +309,13 @@ class _HomePageViewState extends State<HomePageView> {
                               }
 
                               if (_viewModel.bestOfAllYearGames[index - 1] != null) {
-                                return Align(
-                                    child: GameCard(gameModel: _viewModel.bestOfAllYearGames[index - 1]!));
+                                return Align(child: GameCard(gameModel: _viewModel.bestOfAllYearGames[index - 1]!));
                               } else {
                                 return SizedBox();
                               }
                             });
                       } else {
-                        return buildGameCardShimmer(context);
+                        return buildGameCardShimmer();
                       }
                     },
                   ),
@@ -331,28 +329,74 @@ class _HomePageViewState extends State<HomePageView> {
     );
   }
 
+  ListView buildGameCardShimmer() {
+    return ListView.separated(
+        physics: BouncingScrollPhysics(),
+        scrollDirection: Axis.horizontal,
+        cacheExtent: context.screenWidth * 5,
+        itemCount: 6,
+        separatorBuilder: (context, index) {
+          return SizedBox(width: context.lowValue);
+        },
+        itemBuilder: (context, index) {
+          if (index == 0 || index == 5) {
+            return SizedBox(
+              width: context.lowValue,
+            );
+          } else {
+            return Shimmer.fromColors(
+              baseColor: context.currentAppThemeEnum == ThemeEnums.DARK_MODE
+                  ? Colors.grey.shade900
+                  : Colors.grey.shade300,
+              highlightColor: context.currentAppThemeEnum == ThemeEnums.DARK_MODE
+                  ? Colors.grey.shade800
+                  : Colors.grey.shade200,
+              child: Container(
+                width: 144,
+                height: 160,
+                decoration:
+                    BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.white),
+              ),
+            );
+          }
+        });
+  }
+
+  ListView buildGenresShimmer() {
+    return ListView.separated(
+        physics: BouncingScrollPhysics(),
+        scrollDirection: Axis.horizontal,
+        itemCount: 6,
+        separatorBuilder: (c, i) => SizedBox(width: context.veryLowValue),
+        itemBuilder: (context, index) {
+          if (index == 0 || index == 5) {
+            return SizedBox(
+              width: context.lowValue,
+            );
+          } else {
+            return Shimmer.fromColors(
+              baseColor:
+                  context.currentAppThemeEnum == ThemeEnums.DARK_MODE ? Colors.grey.shade900 : Colors.grey.shade300,
+              highlightColor:
+                  context.currentAppThemeEnum == ThemeEnums.DARK_MODE ? Colors.grey.shade800 : Colors.grey.shade200,
+              child: Align(
+                child: Container(
+                  height: 44,
+                  width: 150,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(18),
+                      color: context.theme.primaryColor.withAlpha(160),
+                      border: Border.all(color: context.theme.primaryColor, width: 3)),
+                ),
+              ),
+            );
+          }
+        });
+  }
+
   Widget buildRecommendedCardShimmer(BuildContext context) {
     return Container(
       width: 350,
-      height: 200,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        color: context.currentAppThemeEnum == ThemeEnums.DARK_MODE ? Colors.grey.shade900 : Colors.grey.shade300,
-      ),
-      child: Shimmer.fromColors(
-        child: Container(
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: Colors.grey),
-        ),
-        baseColor: context.currentAppThemeEnum == ThemeEnums.DARK_MODE ? Colors.grey.shade900 : Colors.grey.shade300,
-        highlightColor:
-            context.currentAppThemeEnum == ThemeEnums.DARK_MODE ? Colors.grey.shade800 : Colors.grey.shade200,
-      ),
-    );
-  }
-
-  Widget buildGameCardShimmer(BuildContext context) {
-    return Container(
-      width: 150,
       height: 200,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
