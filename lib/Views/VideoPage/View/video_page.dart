@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:gamepedia/Core/Extensions/context_extensions.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class VideoPage extends StatefulWidget {
@@ -13,11 +14,17 @@ class VideoPage extends StatefulWidget {
 
 class _VideoPageState extends State<VideoPage> {
   late YoutubePlayerController _controller;
+  late YoutubePlayer _player;
+
 
   @override
   void initState() {
     super.initState();
-    _controller = YoutubePlayerController(initialVideoId: widget.videoID, flags: YoutubePlayerFlags(autoPlay: false));
+    _controller = YoutubePlayerController(
+      initialVideoId: widget.videoID,
+      flags: YoutubePlayerFlags(autoPlay: false,forceHD: true),
+    );
+    _player = YoutubePlayer(controller: _controller);
   }
 
   @override
@@ -28,23 +35,35 @@ class _VideoPageState extends State<VideoPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black38.withOpacity(0.5),
-      body: Stack(
-        alignment: Alignment.center,
-        children: [
-          GestureDetector(onTap: (() => Navigator.pop(context))),
-          YoutubePlayer(
-            controller: _controller,
-            showVideoProgressIndicator: true,
-            progressColors: ProgressBarColors(playedColor: Colors.amber, handleColor: Colors.amber),
-            onReady: () {
-            },
-            onEnded: (_){
-              // DeviceOrientation.landscapeLeft;
-            },
-          ),
-        ],
+    return WillPopScope(
+      onWillPop: ()async{
+        if(_controller.value.isFullScreen){
+          _controller.toggleFullScreenMode();
+        }
+
+        return true;
+      },
+      child: Scaffold(
+        backgroundColor: context.theme.scaffoldBackgroundColor.withOpacity(0.9),
+        body: Stack(
+          alignment: Alignment.center,
+          children: [
+            GestureDetector(onTap: (() => Navigator.pop(context))),
+            Hero(
+              tag: widget.videoID,
+              child: YoutubePlayer(
+                controller: _controller,
+                showVideoProgressIndicator: true,
+                progressColors: ProgressBarColors(playedColor: Colors.amber, handleColor: Colors.amber),
+                onReady: () {
+                },
+                onEnded: (_){
+                  // DeviceOrientation.landscapeLeft;
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -212,50 +212,53 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
             child: Observer(
               builder: (context) {
                 if (_viewModel.isSeeMoreOpen) {
-                  return Text.rich(
-                    TextSpan(
-                      children: [
-                        TextSpan(text: "${gameModel.storyline ?? gameModel.summary} "),
-                        WidgetSpan(
-                          child: InkWell(
-                            child: Text(
-                              "Daha az gör",
-                              style: context.textTheme.bodyText1!.copyWith(color: Colors.blue[800]),
+                  return GestureDetector(
+                    onTap: () => _viewModel.setIsSeeMoreOpen(!_viewModel.isSeeMoreOpen),
+                    child: Text.rich(
+                      TextSpan(
+                        children: [
+                          TextSpan(text: "${gameModel.storyline ?? gameModel.summary} "),
+                          WidgetSpan(
+                            child: InkWell(
+                              child: Text(
+                                "Daralt", // TODO Locazilation Yapılacak
+                                style: context.textTheme.bodyText1!.copyWith(
+                                    color: Colors.blue[800]
+                                ),
+                              ),
+                              onTap: () {
+                                _viewModel.setIsSeeMoreOpen(false);
+                              },
                             ),
-                            onTap: () {
-                              _viewModel.setIsSeeMoreOpen(false);
-                            },
                           ),
-                        ),
-                        // TextSpan(
-                        //   text: 'bold',
-                        //   style: TextStyle(fontWeight: FontWeight.bold),
-                        // ),
-                      ],
+                          // TextSpan(
+                          //   text: 'bold',
+                          //   style: TextStyle(fontWeight: FontWeight.bold),
+                          // ),
+                        ],
+                      ),
                     ),
                   );
                 } else {
-                  return Text.rich(
-                    TextSpan(
-                      children: [
-                        TextSpan(
-                            text: "${gameModel.storyline?.getLimitedText ?? gameModel.summary?.getLimitedText}... "),
-                        WidgetSpan(
-                          child: InkWell(
+                  return GestureDetector(
+                    onTap: () => _viewModel.setIsSeeMoreOpen(!_viewModel.isSeeMoreOpen),
+                    child: Text.rich(
+                      TextSpan(
+                        children: [
+                          TextSpan(
+                              text: "${gameModel.storyline?.getLimitedText ?? gameModel.summary?.getLimitedText}... "),
+                          WidgetSpan(
                             child: Text(
-                              "devamını gör",
+                              "Daha Fazla Gör", // TODO: Localization Yapılacak
                               style: context.textTheme.bodyText1!.copyWith(color: Colors.blue[800]),
                             ),
-                            onTap: () {
-                              _viewModel.setIsSeeMoreOpen(true);
-                            },
                           ),
-                        ),
-                        // TextSpan(
-                        //   text: 'bold',
-                        //   style: TextStyle(fontWeight: FontWeight.bold),
-                        // ),
-                      ],
+                          // TextSpan(
+                          //   text: 'bold',
+                          //   style: TextStyle(fontWeight: FontWeight.bold),
+                          // ),
+                        ],
+                      ),
                     ),
                   );
                 }
@@ -428,45 +431,44 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
   }
 
   Widget buildVideoCard(String videoID) {
-    if (videoID != null) {
-      return SizedBox(
-        child: Padding(
-          padding: context.paddingAllLow,
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(24),
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                Image.network(
-                  _appConstants.getYoutubeVideoThumbnailUrl(videoID),
-                  width: context.dynamicWidth(0.6),
-                  fit: BoxFit.cover,
+      return Hero(
+        tag: videoID,
+        child: GestureDetector(
+          onTap: (){
+            Navigator.of(context).push(
+              PageRouteBuilder(
+                opaque: false, // set to false
+                pageBuilder: (_, __, ___) => VideoPage(
+                  videoID: videoID,
                 ),
-                IconButton(
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      PageRouteBuilder(
-                        opaque: false, // set to false
-                        pageBuilder: (_, __, ___) => VideoPage(
-                          videoID: videoID,
-                        ),
+              ),
+            );
+          },
+          child: SizedBox(
+            child: Padding(
+              padding: context.paddingAllLow,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(24),
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Image.network(
+                      _appConstants.getYoutubeVideoThumbnailUrl(videoID),
+                      width: context.dynamicWidth(0.6),
+                      fit: BoxFit.cover,
+                    ),
+                    Icon(
+                        Fontisto.youtube_play,
+                        color: Colors.red,
+                        size: 40,
                       ),
-                    );
-                  },
-                  icon: Icon(
-                    Icons.play_arrow,
-                    color: Colors.white,
-                    size: 48,
-                  ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         ),
       );
-    } else {
-      return SizedBox();
-    }
   }
 
   Widget buildScreenshotCard(String? imageID) {
