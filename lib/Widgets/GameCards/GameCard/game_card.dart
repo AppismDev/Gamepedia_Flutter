@@ -21,7 +21,6 @@ class GameCard extends StatefulWidget {
 }
 
 class _GameCardState extends State<GameCard> {
-
   GameCardViewModel _viewModel = GameCardViewModel();
   AppConstants _appConstants = AppConstants.instance;
 
@@ -33,25 +32,27 @@ class _GameCardState extends State<GameCard> {
 
   @override
   Widget build(BuildContext context) {
-    return BounceWithoutHover(
-      onPressed: (){
-        MaterialPageRoute route = MaterialPageRoute(builder: (context)=>GameDetailsPage(gameModel: widget.gameModel));
-        Navigator.of(context).push(route);
-      },
-      duration: Duration(milliseconds: 100),
-      child: Card(
-        elevation: 2,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        child: Column(
-          children: [
-            Stack(
+    return Align(
+      child: Container(
+        height: context.dynamicHeight(0.25),
+        child: BounceWithoutHover(
+          onPressed: () {
+            MaterialPageRoute route = MaterialPageRoute(builder: (context) => GameDetailsPage(gameModel: widget.gameModel));
+            Navigator.of(context).push(route);
+          },
+          duration: Duration(milliseconds: 100),
+          child: Card(
+            elevation: 12,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            child: Column(
               children: [
-                CachedNetworkImage(
-                  width: 144,
-                  height: 160,
-                  imageUrl: "${_appConstants.getImageUrl(widget.gameModel.cover!.imageId!, ImageSize.COVER_BIG)}",
-                  imageBuilder: (context, imageProvider) =>
-                      Container(
+                Stack(
+                  children: [
+                    CachedNetworkImage(
+                      width: 144,
+                      height: 160,
+                      imageUrl: "${_appConstants.getImageUrl(widget.gameModel.cover!.imageId!, ImageSize.COVER_BIG)}",
+                      imageBuilder: (context, imageProvider) => Container(
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(10),
                           child: new Container(
@@ -66,73 +67,71 @@ class _GameCardState extends State<GameCard> {
                           ),
                         ),
                       ),
-                  progressIndicatorBuilder: (context,string,downloadProgress){
-                    return Container(
-                        width: 120,
-                        height: 100,
-                        child: Center(
-                          child: CircularProgressIndicator(),
-                        )
-                    );
-                  },
-                  errorWidget: (context, url, error) => Icon(Icons.error),
-                ),
-                Positioned(
-                  right: 0,
-                  bottom:10,
-                  child: Container(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8,vertical: 2),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            AntDesign.star,
-                            size: 14,
-                            color: Colors.amber,
+                      progressIndicatorBuilder: (context, string, downloadProgress) {
+                        return Container(
+                            width: 120,
+                            height: 100,
+                            child: Center(
+                              child: CircularProgressIndicator(),
+                            ));
+                      },
+                      errorWidget: (context, url, error) => Icon(Icons.error),
+                    ),
+                    Positioned(
+                      right: 0,
+                      bottom: 10,
+                      child: Container(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                AntDesign.star,
+                                size: 14,
+                                color: Colors.amber,
+                              ),
+                              SizedBox(width: 4),
+                              Text(
+                                "${widget.gameModel.totalRating?.toInt()} / 100",
+                                style: GoogleFonts.montserrat(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w500,
+                                    color: context.otherTheme.textTheme.bodyText1!.color),
+                              )
+                            ],
                           ),
-                          SizedBox(width: 4),
-                          Text(
-                            "${widget.gameModel.totalRating?.toInt()} / 100",
-                            style: GoogleFonts.montserrat(
-                                fontSize: 10,
-                                fontWeight: FontWeight.w500,
-                                color: context.otherTheme.textTheme.bodyText1!.color
-                            ),
-                          )
-                        ],
+                        ),
+                        decoration: BoxDecoration(
+                            color: context.otherTheme.cardColor.withOpacity(0.9),
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(12),
+                              bottomLeft: Radius.circular(12),
+                            )),
+                      ),
+                    )
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 2),
+                  child: Container(
+                    width: 100,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 1),
+                      child: Text(
+                        "${widget.gameModel.name}",
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                        style: GoogleFonts.montserrat(fontSize: 12, fontWeight: FontWeight.w400),
                       ),
                     ),
-                    decoration: BoxDecoration(
-                        color: context.otherTheme.cardColor.withOpacity(0.9),
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(12),
-                          bottomLeft: Radius.circular(12),
-                        )
-                    ),
-                  ),
-                )
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 4,horizontal: 2),
-              child: Container(
-                width: 100,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 1),
-                  child: Text(
-                    "${widget.gameModel.name}",
-                    textAlign: TextAlign.center,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                    style: GoogleFonts.montserrat(fontSize: 12, fontWeight: FontWeight.w400),
                   ),
                 ),
-
-              ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

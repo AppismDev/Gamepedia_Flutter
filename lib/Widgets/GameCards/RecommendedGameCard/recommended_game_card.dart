@@ -62,11 +62,20 @@ class _RecommendedGameCardState extends State<RecommendedGameCard> {
                     imageBuilder: (context, imageProvider) => Container(
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(widget.radius),
-                        child: new Container(
-                          decoration: new BoxDecoration(color: Colors.white.withOpacity(0.0)),
+                        child: Container(
+                          decoration: BoxDecoration(color: Colors.white.withOpacity(0.0)),
                         ),
                       ),
                       decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            color: context.currentAppThemeEnum == ThemeEnums.LIGHT_MODE
+                                ? Colors.grey.shade700
+                                : context.darkThemeData.primaryColorDark,
+                            blurRadius: 20,
+                            offset: Offset(2, 16), // Shadow position
+                          ),
+                        ],
                         borderRadius: BorderRadius.circular(widget.radius),
                         image: DecorationImage(
                           image: imageProvider,
@@ -109,16 +118,6 @@ class _RecommendedGameCardState extends State<RecommendedGameCard> {
           ),
         ),
       ),
-    );
-  }
-
-  Shimmer buildShimmer(BuildContext context) {
-    return Shimmer.fromColors(
-      child: Container(
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(widget.radius), color: Colors.grey),
-      ),
-      baseColor: context.currentAppThemeEnum == ThemeEnums.DARK_MODE ? Colors.grey.shade900 : Colors.grey.shade300,
-      highlightColor: context.currentAppThemeEnum == ThemeEnums.DARK_MODE ? Colors.grey.shade800 : Colors.grey.shade200,
     );
   }
 }

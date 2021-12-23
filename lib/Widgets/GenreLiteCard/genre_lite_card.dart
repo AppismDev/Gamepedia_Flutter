@@ -12,33 +12,31 @@ class GenreLiteCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BounceWithoutHover(
-      onPressed: (){},
+      onPressed: () {},
       duration: Duration(milliseconds: 100),
-      child: Container(
-        height: 44,
-        width: 150,
-        child: Center(
-          child: Padding(
-            padding: context.paddingAllVeryLow,
-            child: Text(
-              "${genreLiteModel.name}",
-              textAlign: TextAlign.center,
-              overflow: TextOverflow.ellipsis,
-              style: GoogleFonts.montserrat(
-                color: Colors.grey.shade100,
-                fontSize: 16,
-                fontWeight: FontWeight.w700
+      child: Card(
+        elevation: 8,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(18),
+        ),
+        child: Container(
+          height: 44,
+          width: 150,
+          child: Center(
+            child: Padding(
+              padding: context.paddingAllVeryLow,
+              child: Text(
+                "${genreLiteModel.name}",
+                textAlign: TextAlign.center,
+                overflow: TextOverflow.ellipsis,
+                style: GoogleFonts.montserrat(color: Colors.grey.shade100, fontSize: 16, fontWeight: FontWeight.w700),
               ),
             ),
           ),
-        ),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(18),
-          color: context.theme.primaryColor.withAlpha(160),
-          border: Border.all(
-            color: context.theme.primaryColor,
-            width: 3
-          )
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(18),
+              color: context.theme.primaryColor.withAlpha(160),
+              border: Border.all(color: context.theme.primaryColor, width: 3)),
         ),
       ),
     );

@@ -14,6 +14,8 @@ class ThemeProvider extends ChangeNotifier {
 
 
   ThemeData get currentTheme => _currentTheme;
+  ThemeData get lightThemeData => AppThemeLight.instance.theme;
+  ThemeData get darkThemeData => AppThemeDark.instance.theme;
   ThemeEnums get currentAppThemeEnum => _currentAppThemeEnum;
 
 

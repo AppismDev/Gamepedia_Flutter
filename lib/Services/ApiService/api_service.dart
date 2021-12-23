@@ -6,6 +6,7 @@ import 'package:gamepedia/Models/ApiModels/cover_model.dart';
 import 'package:gamepedia/Models/ApiModels/game_model.dart';
 import 'package:gamepedia/Models/ApiModels/genre_lite_model.dart';
 import 'package:gamepedia/Models/ApiModels/screenshot_model.dart';
+import 'package:gamepedia/Models/ApiModels/theme_model.dart';
 import 'package:gamepedia/Models/ApiModels/token_info.dart';
 import 'package:gamepedia/Services/ApiService/i_api_service.dart';
 import 'package:http/http.dart' as http;
@@ -275,6 +276,39 @@ class ApiService extends IApiService {
       print("[HATA] [ApiService] [getArtWorks] --> " + e.toString());
       return null;
     }
+  }
+
+  @override
+  Future<List<ThemeModel>?> getAllThemes() async {
+    try {
+      Uri url = Uri.parse(_appConstants.getThemesEndPoint());
+
+      if (accessToken == null) {
+        throw Exception("Token Not be Null");
+      }
+
+      Map<String, String> headers = {'Authorization': 'token=' + accessToken!};
+
+      http.Response response = await http.get(url, headers: headers);
+
+      if (response.statusCode == 200) {
+        List<ThemeModel> themeModels = [];
+        List body = jsonDecode(response.body);
+
+        body.forEach((themeElement) {
+          themeModels.add(ThemeModel.fromJSON(themeElement));
+        });
+        return themeModels;
+      } else {
+        print("[HATA] [ApiService] [getArtWorks] --> " + response.statusCode.toString());
+        print(response.body);
+        return null;
+      }
+    } catch (e) {
+      print("[HATA] [ApiService] [getArtWorks] --> " + e.toString());
+      return null;
+    }
+
   }
 
 
