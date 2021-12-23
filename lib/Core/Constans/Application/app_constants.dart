@@ -23,6 +23,7 @@ class AppConstants {
   String get SCREENSHOTS_ENDPOINT => API_BASE_URL + "/screenshots";
   String get ARTWORKS_ENDPOINT => API_BASE_URL + "/artworks";
   String get GENRES_ENDPOINT => API_BASE_URL + "/genres";
+  String get THEMES_ENDPOINT => API_BASE_URL + "/themes";
 
   String getBestOfAllTimeUrl(int page) => GAMES_ENDPOINT + "/bestOfAllTime?page=$page";
   String getBestOfLastMonths(int page) => GAMES_ENDPOINT + "/bestOfLastMonths?page=$page";
@@ -31,6 +32,7 @@ class AppConstants {
 
   String getCoverUrl(String idString) => COVER_ENDPOINT + "/$idString";
   String getScreenshotsUrl(String idString) => SCREENSHOTS_ENDPOINT + "/$idString";
+  String getThemesEndPoint() => THEMES_ENDPOINT + "/all";
   String getArtworksUrl(String idString) => ARTWORKS_ENDPOINT + "/$idString";
   String getImageUrl(String hash,ImageSize size) => IMAGE_UPLOADS_URL + "/t_${size.name.toLowerCase()}/${hash}.jpg";
   String getYoutubeVideoUrl(String videoID) => YOUTUBE_VIDEO_URL + "${videoID}";

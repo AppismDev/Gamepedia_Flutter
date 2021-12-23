@@ -73,9 +73,17 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
                   clipper: ProfileClipper(),
                   clipBehavior: Clip.antiAlias,
                   child: Container(
-                    decoration: BoxDecoration(
-                        // boxShadow: BoxShadow
-                        ),
+                    // decoration: BoxDecoration(
+                    //   boxShadow: [
+                    //     BoxShadow(
+                    //       color: Colors.grey.shade700,
+                    //       blurRadius: 20,
+                    //       spreadRadius: 20,
+                    //       offset: Offset(-20, -20),
+                    //     ),
+                    //
+                    //   ],
+                    // ),
                     width: context.screenWidth,
                     height: (context.safeScreenHeight / 2.1) - context.appBarHeight,
                     child: Align(
@@ -88,7 +96,9 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
                         imageBuilder: (context, imageProvider) => Container(
                           child: ClipRRect(
                             child: Container(
-                              decoration: BoxDecoration(color: Colors.white.withOpacity(0.0)),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.0),
+                              ),
                             ),
                           ),
                           decoration: BoxDecoration(

@@ -30,6 +30,10 @@ extension ThemeExtensions on BuildContext{
   ColorScheme get colors => theme.colorScheme;
   ThemeEnums get currentAppThemeEnum => Provider.of<ThemeProvider>(this).currentAppThemeEnum;
   ThemeData get otherTheme => Provider.of<ThemeProvider>(this).otherTheme;
+  ThemeData get darkThemeData => Provider.of<ThemeProvider>(this).darkThemeData;
+  ThemeData get lightThemeData => Provider.of<ThemeProvider>(this).lightThemeData;
+
+
   // MaterialColor get primarySwatchColor => Provider.of<ThemeProvider>(this).currentPrimarySwatch;
 }
 

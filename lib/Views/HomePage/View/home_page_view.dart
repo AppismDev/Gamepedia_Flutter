@@ -35,6 +35,7 @@ class _HomePageViewState extends State<HomePageView> {
     _viewModel.getBestOfLastMonths();
     _viewModel.getBestOfLastYear();
     _viewModel.getAllGenres();
+    _viewModel.getAllThemes();
   }
 
   @override
@@ -98,7 +99,7 @@ class _HomePageViewState extends State<HomePageView> {
                 if (_viewModel.bestOfAllYearGames.isNotEmpty) {
                   return Container(
                     width: context.screenWidth,
-                    height: 200,
+                    height: context.dynamicHeight(0.3),
                     child: ListView.builder(
                         cacheExtent: context.screenWidth * 4,
                         physics: BouncingScrollPhysics(),
@@ -108,6 +109,8 @@ class _HomePageViewState extends State<HomePageView> {
                           if (_viewModel.bestOfAllYearGames[index] != null) {
                             return RecommendedGameCard(
                               gameModel: _viewModel.bestOfAllYearGames[index]!,
+                              width: context.dynamicWidth(0.925),
+                              height: context.dynamicHeight(0.245),
                             );
                           } else {
                             return buildRecommendedCardShimmer(context);
@@ -184,7 +187,7 @@ class _HomePageViewState extends State<HomePageView> {
                 Container(
                   margin: context.paddingOnlyTopLow,
                   width: context.screenWidth,
-                  height: 200,
+                  height: context.dynamicHeight(0.3),
                   child: Observer(
                     builder: (_) {
                       if (_viewModel.bestOfLastMonths.isNotEmpty) {
@@ -202,12 +205,9 @@ class _HomePageViewState extends State<HomePageView> {
                                   width: context.lowValue,
                                 );
                               }
-
                               if (_viewModel.bestOfLastMonths[index - 1] != null) {
-                                return Align(
-                                  child: GameCard(
-                                    gameModel: _viewModel.bestOfLastMonths[index - 1]!,
-                                  ),
+                                return GameCard(
+                                  gameModel: _viewModel.bestOfLastMonths[index - 1]!,
                                 );
                               } else {
                                 return SizedBox();
@@ -238,7 +238,7 @@ class _HomePageViewState extends State<HomePageView> {
                 Container(
                   margin: context.paddingOnlyTopLow,
                   width: context.screenWidth,
-                  height: 200,
+                  height: context.dynamicHeight(0.3),
                   child: Observer(
                     builder: (_) {
                       if (_viewModel.bestOfLastYear.isNotEmpty) {
@@ -289,7 +289,7 @@ class _HomePageViewState extends State<HomePageView> {
                 Container(
                   margin: context.paddingOnlyTopLow,
                   width: context.screenWidth,
-                  height: 200,
+                  height: context.dynamicHeight(0.3),
                   child: Observer(
                     builder: (_) {
                       if (_viewModel.bestOfAllYearGames.isNotEmpty) {
@@ -395,20 +395,25 @@ class _HomePageViewState extends State<HomePageView> {
   }
 
   Widget buildRecommendedCardShimmer(BuildContext context) {
-    return Container(
-      width: 350,
-      height: 200,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        color: context.currentAppThemeEnum == ThemeEnums.DARK_MODE ? Colors.grey.shade900 : Colors.grey.shade300,
-      ),
-      child: Shimmer.fromColors(
+    return Align(
+      child: Padding(
+        padding: const EdgeInsets.all(24.0),
         child: Container(
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: Colors.grey),
+          width: context.dynamicWidth(0.925),
+          height: context.dynamicHeight(0.245),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            color: context.currentAppThemeEnum == ThemeEnums.DARK_MODE ? Colors.grey.shade900 : Colors.grey.shade300,
+          ),
+          child: Shimmer.fromColors(
+            child: Container(
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: Colors.grey),
+            ),
+            baseColor: context.currentAppThemeEnum == ThemeEnums.DARK_MODE ? Colors.grey.shade900 : Colors.grey.shade300,
+            highlightColor:
+                context.currentAppThemeEnum == ThemeEnums.DARK_MODE ? Colors.grey.shade800 : Colors.grey.shade200,
+          ),
         ),
-        baseColor: context.currentAppThemeEnum == ThemeEnums.DARK_MODE ? Colors.grey.shade900 : Colors.grey.shade300,
-        highlightColor:
-            context.currentAppThemeEnum == ThemeEnums.DARK_MODE ? Colors.grey.shade800 : Colors.grey.shade200,
       ),
     );
   }

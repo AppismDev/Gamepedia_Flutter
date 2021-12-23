@@ -5,6 +5,7 @@ import 'package:gamepedia/Models/ApiModels/cover_model.dart';
 import 'package:gamepedia/Models/ApiModels/game_model.dart';
 import 'package:gamepedia/Models/ApiModels/genre_lite_model.dart';
 import 'package:gamepedia/Models/ApiModels/screenshot_model.dart';
+import 'package:gamepedia/Models/ApiModels/theme_model.dart';
 import 'package:gamepedia/Models/ApiModels/token_info.dart';
 
 abstract class IApiService{
@@ -29,5 +30,8 @@ abstract class IApiService{
 
   // Artworks Route
   Future<List<ArtworkModel>?> getArtWorks(String idString);
+
+  //Themes Mode
+  Future<List<ThemeModel>?> getAllThemes();
 
 }
