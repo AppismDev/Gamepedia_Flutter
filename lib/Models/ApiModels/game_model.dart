@@ -603,6 +603,137 @@ class GameModelArtworks {
 }
 
 class GameModel {
+/*
+{
+  "id": 1020,
+  "aggregated_rating": 95.84,
+  "aggregated_rating_count": 34,
+  "artworks": [
+    {
+      "id": 2628,
+      "image_id": "gtng284ejjted82pncis"
+    }
+  ],
+  "category": 0,
+  "collection": {
+    "id": 847,
+    "games": [
+      5850
+    ],
+    "name": "Grand Theft Auto"
+  },
+  "cover": {
+    "id": 120937,
+    "image_id": "co2lbd"
+  },
+  "created_at": 1326127365,
+  "first_release_date": 1379376000,
+  "follows": 1755,
+  "game_engines": [
+    {
+      "id": 26,
+      "logo": {
+        "id": 16,
+        "image_id": "ssdjdq31lxtqqgpfkycg"
+      },
+      "name": "RAGE"
+    }
+  ],
+  "game_modes": [
+    {
+      "id": 1,
+      "name": "Single player"
+    }
+  ],
+  "genres": [
+    {
+      "id": 5,
+      "name": "Shooter"
+    }
+  ],
+  "involved_companies": [
+    {
+      "id": 18070,
+      "company": {
+        "id": 365,
+        "name": "Rockstar North"
+      }
+    }
+  ],
+  "name": "Grand Theft Auto V",
+  "platforms": [
+    {
+      "id": 6,
+      "name": "PC (Microsoft Windows)",
+      "platform_logo": {
+        "id": 203,
+        "image_id": "irwvwpl023f8y19tidgq"
+      }
+    }
+  ],
+  "player_perspectives": [
+    {
+      "id": 1,
+      "name": "First person"
+    }
+  ],
+  "rating": 90.27326520548041,
+  "rating_count": 3301,
+  "release_dates": [
+    {
+      "id": 20290,
+      "date": 1416268800
+    }
+  ],
+  "screenshots": [
+    {
+      "id": 5670,
+      "image_id": "o7q3ikzmkjxbftrd64ok"
+    }
+  ],
+  "similar_games": [
+    {
+      "id": 40,
+      "cover": {
+        "id": 123159,
+        "image_id": "co2n13"
+      },
+      "name": "Mafia II",
+      "total_rating": 76.9946721653636
+    }
+  ],
+  "slug": "grand-theft-auto-v",
+  "storyline": "Los Santos: a sprawling sun-soaked metropolis full of self-help gurus, starlets and fading celebrities, once the envy of the Western world, now struggling to stay afloat in an era of economic uncertainty and cheap reality TV.\n\nAmidst the turmoil, three very different criminals plot their own chances of survival and success: Franklin, a street hustler looking for real opportunities and serious money; Michael, a professional ex-con whose retirement is a lot less rosy than he hoped it would be; and Trevor, a violent maniac driven by the chance of a cheap high and the next big score. Running out of options, the crew risks everything in a series of daring",
+  "summary": "The biggest, most dynamic and most diverse open world ever created, Grand Theft Auto V blends storytelling and gameplay in new ways as players repeatedly jump in and out of the lives of the game’s three lead characters, playing all sides of the game’s interwoven story.",
+  "themes": [
+    {
+      "id": 1,
+      "name": "Action"
+    }
+  ],
+  "total_rating": 93.05663260274021,
+  "total_rating_count": 3335,
+  "videos": [
+    {
+      "id": 710,
+      "video_id": "QkkoHAzjnUs"
+    }
+  ],
+  "websites": [
+    {
+      "id": 18730,
+      "url": "http://www.rockstargames.com/V/"
+    }
+  ],
+  "checksum": "0b8975bd-fda2-799b-9d37-33e9c8542bbc",
+  "expanded_games": [
+    {
+      "id": 134709,
+      "name": "Grand Theft Auto V: Expanded and Enhanced"
+    }
+  ]
+}
+*/
 
   int? id;
   double? aggregatedRating;
@@ -626,6 +757,7 @@ class GameModel {
   List<GameModelReleaseDates?>? releaseDates;
   List<GameModelScreenshots?>? screenshots;
   List<GameModelSimilarGames?>? similarGames;
+  String? slug;
   String? storyline;
   String? summary;
   List<GameModelThemes?>? themes;
@@ -659,6 +791,7 @@ class GameModel {
     this.releaseDates,
     this.screenshots,
     this.similarGames,
+    this.slug,
     this.storyline,
     this.summary,
     this.themes,
@@ -762,6 +895,7 @@ class GameModel {
       });
       similarGames = arr0;
     }
+    slug = json['slug']?.toString();
     storyline = json['storyline']?.toString();
     summary = json['summary']?.toString();
     if (json['themes'] != null) {
@@ -898,6 +1032,7 @@ class GameModel {
       });
       data['similar_games'] = arr0;
     }
+    data['slug'] = slug;
     data['storyline'] = storyline;
     data['summary'] = summary;
     if (themes != null) {

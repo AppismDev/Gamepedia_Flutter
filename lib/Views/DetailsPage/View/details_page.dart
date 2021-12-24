@@ -233,7 +233,7 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
                               child: Text(
                                 "Daralt", // TODO Locazilation Yapılacak
                                 style: context.textTheme.bodyText1!.copyWith(
-                                    color: Colors.blue[800]
+                                    color: context.lightThemeData.primaryColor
                                 ),
                               ),
                               onTap: () {
@@ -260,7 +260,7 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
                           WidgetSpan(
                             child: Text(
                               "Daha Fazla Gör", // TODO: Localization Yapılacak
-                              style: context.textTheme.bodyText1!.copyWith(color: Colors.blue[800]),
+                              style: context.textTheme.bodyText1!.copyWith(color: context.lightThemeData.primaryColor),
                             ),
                           ),
                           // TextSpan(
