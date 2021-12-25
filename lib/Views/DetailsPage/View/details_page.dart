@@ -1,9 +1,5 @@
-import 'dart:developer';
-
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:gamepedia/Core/Constans/Application/app_constants.dart';
@@ -17,7 +13,7 @@ import 'package:gamepedia/Views/VideoPage/View/video_page.dart';
 import 'package:gamepedia/Widgets/Clipper/arc_clipper.dart';
 import 'package:gamepedia/Widgets/Logo/gamepedia_logo.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class GameDetailsPage extends StatefulWidget {
   GameModel gameModel;
@@ -111,20 +107,8 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
                   ),
                 ),
                 Positioned(
-                  // bottom: context.screenHeight / 23,
-                  top: (context.safeScreenHeight / 2.64) - context.appBarHeight,
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    child: Icon(
-                      FontAwesome5Solid.play,
-                      color: context.theme.primaryColor,
-                    ),
-                    style: ButtonStyle(
-                      shape: MaterialStateProperty.all(CircleBorder()),
-                      padding: MaterialStateProperty.all(context.paddingAllMedium),
-                      backgroundColor: MaterialStateProperty.all(Colors.white),
-                    ),
-                  ),
+                  top: (context.safeScreenHeight / 2.70) - context.appBarHeight,
+                  child: buildTwitchButton(context, gameModel),
                 )
               ],
             ),
@@ -232,9 +216,8 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
                             child: InkWell(
                               child: Text(
                                 "Daralt", // TODO Locazilation Yapılacak
-                                style: context.textTheme.bodyText1!.copyWith(
-                                    color: context.lightThemeData.primaryColor
-                                ),
+                                style:
+                                    context.textTheme.bodyText1!.copyWith(color: context.lightThemeData.primaryColor),
                               ),
                               onTap: () {
                                 _viewModel.setIsSeeMoreOpen(false);
@@ -416,6 +399,61 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
     );
   }
 
+  ElevatedButton buildTwitchButton(BuildContext context, GameModel gameModel) {
+    return ElevatedButton(
+      child: Image.asset(
+        AppConstants.instance.twitchIcon,
+        width: context.dynamicHeight(0.06),
+      ),
+      onPressed: () async {
+        if (await canLaunch(_appConstants.baseTwitchLink)) {
+          if (gameModel.name != null) {
+            await launch(_appConstants.getTwitchGameLink(gameModel.name!));
+          } else {
+            //TODO hata mesajları özelleştirilecek
+            print("Oyun Twitchte Açılırken bir hata oluştu");
+          }
+        } else {
+          //TODO i18n ;) yapılacak ve tasarım değiştirilecek
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: Text("Uygulama Bulunamadı"),
+                content: Text.rich(TextSpan(children: [
+                  TextSpan(text: "Twitch uygulaması bu cihazda bulunamadı."),
+                  WidgetSpan(
+                      child: InkWell(
+                    onTap: () async {
+                      if (await canLaunch(_appConstants.getTwitchPlayStoreDeepLink)) {
+                        Navigator.pop(context);
+                        await launch(_appConstants.getTwitchPlayStoreDeepLink);
+                      } else {
+                        Navigator.pop(context);
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text("Yönlendirme yapılırken bir hata oluştu. Daha sonra tekrar deneyin")));
+                      }
+                    },
+                    child: Text(
+                      "Buradan",
+                      style: context.textTheme.subtitle1!.copyWith(color: Colors.blue[900]),
+                    ),
+                  )),
+                  TextSpan(text: " uygulamayı indirebilirsiniz."),
+                ])),
+              );
+            },
+          );
+        }
+      },
+      style: ButtonStyle(
+        shape: MaterialStateProperty.all(CircleBorder()),
+        padding: MaterialStateProperty.all(context.paddingAllMedium),
+        backgroundColor: MaterialStateProperty.all(context.currentAppThemeEnum == ThemeEnums.LIGHT_MODE? Colors.white : Colors.grey.shade900),
+      ),
+    );
+  }
+
   ClipPath mainImagePlaceholder(BuildContext context) {
     return ClipPath(
       clipper: ProfileClipper(),
@@ -441,44 +479,44 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
   }
 
   Widget buildVideoCard(String videoID) {
-      return Hero(
-        tag: videoID,
-        child: GestureDetector(
-          onTap: (){
-            Navigator.of(context).push(
-              PageRouteBuilder(
-                opaque: false, // set to false
-                pageBuilder: (_, __, ___) => VideoPage(
-                  videoID: videoID,
-                ),
+    return Hero(
+      tag: videoID,
+      child: GestureDetector(
+        onTap: () {
+          Navigator.of(context).push(
+            PageRouteBuilder(
+              opaque: false, // set to false
+              pageBuilder: (_, __, ___) => VideoPage(
+                videoID: videoID,
               ),
-            );
-          },
-          child: SizedBox(
-            child: Padding(
-              padding: context.paddingAllLow,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(24),
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Image.network(
-                      _appConstants.getYoutubeVideoThumbnailUrl(videoID),
-                      width: context.dynamicWidth(0.6),
-                      fit: BoxFit.cover,
-                    ),
-                    Icon(
-                        Fontisto.youtube_play,
-                        color: Colors.red,
-                        size: 40,
-                      ),
-                  ],
-                ),
+            ),
+          );
+        },
+        child: SizedBox(
+          child: Padding(
+            padding: context.paddingAllLow,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(24),
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  Image.network(
+                    _appConstants.getYoutubeVideoThumbnailUrl(videoID),
+                    width: context.dynamicWidth(0.6),
+                    fit: BoxFit.cover,
+                  ),
+                  Icon(
+                    Fontisto.youtube_play,
+                    color: Colors.red,
+                    size: 40,
+                  ),
+                ],
               ),
             ),
           ),
         ),
-      );
+      ),
+    );
   }
 
   Widget buildScreenshotCard(String? imageID) {

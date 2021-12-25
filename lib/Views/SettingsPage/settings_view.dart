@@ -222,7 +222,7 @@ class SettingsView extends StatelessWidget {
                 duration: Duration(milliseconds: 100),
                 child: ListTile(
                   leading: Image.asset(
-                    AppConstants.instance.ICON_ASSET_PATH + "english.png",
+                    AppConstants.instance.englishIcon,
                     height: 40,
                   ),
                   title: Text("English"),
@@ -240,7 +240,7 @@ class SettingsView extends StatelessWidget {
                 duration: Duration(milliseconds: 100),
                 child: ListTile(
                   leading: Image.asset(
-                    AppConstants.instance.ICON_ASSET_PATH + "turkey.png",
+                    AppConstants.instance.turkeyIcon,
                     height: 40,
                   ),
                   title: Text("Türkçe"),

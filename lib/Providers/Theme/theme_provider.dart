@@ -42,13 +42,13 @@ class ThemeProvider extends ChangeNotifier {
     if (themeEnum == PreferencesKeys.DARK_THEME) {
       _currentTheme = AppThemeDark.instance.theme;
       _currentAppThemeEnum = ThemeEnums.DARK_MODE;
-      await _localeManager.setBoolValue(PreferencesKeys.LIGHT_THEME, true);
-      await _localeManager.setBoolValue(PreferencesKeys.DARK_THEME, false);
+      await _localeManager.setBoolValue(PreferencesKeys.DARK_THEME, true);
+      await _localeManager.setBoolValue(PreferencesKeys.LIGHT_THEME, false);
     } else {
       _currentTheme = AppThemeLight.instance.theme;
       _currentAppThemeEnum = ThemeEnums.LIGHT_MODE;
-      await _localeManager.setBoolValue(PreferencesKeys.DARK_THEME, true);
-      await _localeManager.setBoolValue(PreferencesKeys.LIGHT_THEME, false);
+      await _localeManager.setBoolValue(PreferencesKeys.LIGHT_THEME, true);
+      await _localeManager.setBoolValue(PreferencesKeys.DARK_THEME, false);
     }
 
     notifyListeners();

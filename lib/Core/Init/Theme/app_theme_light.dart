@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/material/theme_data.dart';
 import 'package:gamepedia/Core/Init/Theme/i_app_theme.dart';
 import 'package:google_fonts/google_fonts.dart';
-
+//TODO snackbarlarda tema sorunu var bakılacak
 class AppThemeLight implements IAppTheme{
   static AppThemeLight _instance = AppThemeLight._init();
   static AppThemeLight get instance => _instance;

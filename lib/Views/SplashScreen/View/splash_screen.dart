@@ -82,7 +82,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
                 ),
                 Container(
                   child: Text(
-                    "AME",
+                    "ame",
                     style: GoogleFonts.prompt(
                         fontWeight: FontWeight.bold,
                         fontStyle: FontStyle.italic,
@@ -96,7 +96,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
             Row(
               children: [
                 Container(
-                  child: Text("P",
+                  child: Text("p",
                       style: GoogleFonts.prompt(
                           fontWeight: FontWeight.w300,
                           fontStyle: FontStyle.italic,
@@ -106,7 +106,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
                               : Colors.grey.shade200)),
                 ),
                 Container(
-                  child: Text("EDIA",
+                  child: Text("edia",
                       style: GoogleFonts.prompt(
                           fontWeight: FontWeight.w300,
                           fontStyle: FontStyle.italic,
