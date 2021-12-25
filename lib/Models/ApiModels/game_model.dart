@@ -300,6 +300,7 @@ class GameModelPlatforms {
 
   int? id;
   String? name;
+  String? abbreviation;
   GameModelPlatformsPlatformLogo? platformLogo;
 
   GameModelPlatforms({
@@ -310,6 +311,7 @@ class GameModelPlatforms {
   GameModelPlatforms.fromJson(Map<String, dynamic> json) {
     id = json['id']?.toInt();
     name = json['name']?.toString();
+    abbreviation = json['abbreviation']?.toString();
     platformLogo = (json['platform_logo'] != null) ? GameModelPlatformsPlatformLogo.fromJson(json['platform_logo']) : null;
   }
   Map<String, dynamic> toJson() {

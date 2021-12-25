@@ -34,7 +34,7 @@ class _GameCardState extends State<GameCard> {
   Widget build(BuildContext context) {
     return Align(
       child: Container(
-        height: context.dynamicHeight(0.25),
+        height: context.dynamicHeight(0.26),
         child: BounceWithoutHover(
           onPressed: () {
             MaterialPageRoute route = MaterialPageRoute(builder: (context) => GameDetailsPage(gameModel: widget.gameModel));
