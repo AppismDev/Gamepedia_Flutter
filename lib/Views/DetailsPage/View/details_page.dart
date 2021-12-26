@@ -421,6 +421,7 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
       onPressed: () async {
         showDialog(
           context: context,
+          barrierColor: Colors.black.withAlpha(210),
           builder: (context) {
             return TwitchDialog(
               onAccept: () async {

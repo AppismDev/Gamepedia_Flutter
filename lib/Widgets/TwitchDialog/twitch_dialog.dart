@@ -16,12 +16,10 @@ class TwitchDialog extends StatelessWidget {
     return GestureDetector(
       onTap: ()=>Navigator.of(context).pop(),
       child: Dialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         elevation: 0,
         backgroundColor: Colors.transparent,
         child: Container(
-          width: context.screenWidth,
-          height: context.screenHeight,
           child: Center(
             child: Stack(
               children: [
@@ -31,6 +29,7 @@ class TwitchDialog extends StatelessWidget {
                     width: context.dynamicWidth(0.8),
                     height: context.dynamicHeight(0.3),
                     child: Column(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         // TODO i18n Yapılacak :)
                         Padding(
@@ -39,7 +38,8 @@ class TwitchDialog extends StatelessWidget {
                               "Twitch'te İzle",
                             style: GoogleFonts.montserrat(
                               fontWeight: FontWeight.bold,
-                              fontSize: 24
+                              fontSize: 24,
+                              color: Colors.white
                             ),
                           ),
                         ),
@@ -49,7 +49,8 @@ class TwitchDialog extends StatelessWidget {
                             "Bu Oyunu Twitch'te Canlı Olarak İzlemek İster misin ?",
                             textAlign: TextAlign.center,
                             style: GoogleFonts.montserrat(
-                                fontSize: 16
+                                fontSize: 16,
+                                color: Colors.white
                             ),
                           ),
                         ),
@@ -78,6 +79,9 @@ class TwitchDialog extends StatelessWidget {
                             TextButton.icon(
                               icon: Icon(MaterialCommunityIcons.exit_to_app),
                               onPressed: () async => onAccept.call(),
+                              style: TextButton.styleFrom(
+                                  primary: Colors.white
+                              ),
                               label: Text(
                                   "Twitch'e Git",
                                 style: GoogleFonts.montserrat(
@@ -92,12 +96,12 @@ class TwitchDialog extends StatelessWidget {
                       ],
                     ),
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(12),
                       color: Color(0xff6441a5),
                       boxShadow: [
                         BoxShadow(
                           color: Color(0xff262626),
-                          blurRadius: 10,
+                          blurRadius: 1,
                           offset: Offset(1, 1),
                         )
                       ],
