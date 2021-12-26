@@ -89,12 +89,15 @@ class _HomePageViewState extends State<HomePageView> {
   Widget buildBody() {
     return RefreshIndicator(
       onRefresh: ()async{
-        // TODO ViewModeller da [Liste Dolu mu boş mu kontrolü yerine] Loading kontrolü yapılacak
-        await _viewModel.getBestOfAllYearGames();
-        await _viewModel.getBestOfLastMonths();
-        await _viewModel.getBestOfLastYear();
-        await _viewModel.getAllGenres();
-        await _viewModel.getAllThemes();
+        List<Future> futures = [
+          _viewModel.getBestOfAllYearGames(),
+          _viewModel.getBestOfLastMonths(),
+          _viewModel.getBestOfLastYear(),
+          _viewModel.getAllGenres(),
+          _viewModel.getAllThemes()
+        ];
+
+        await Future.wait(futures);
       },
       strokeWidth: 3,
       displacement: 80,
@@ -108,30 +111,29 @@ class _HomePageViewState extends State<HomePageView> {
               padding: context.paddingOnlyTopLow,
               child: Observer(
                 builder: (_) {
-                  if (_viewModel.bestOfAllYearGames.isNotEmpty) {
-                    return Container(
-                      width: context.screenWidth,
-                      height: context.dynamicHeight(0.3),
-                      child: ListView.builder(
-                          cacheExtent: context.screenWidth * 4,
-                          physics: BouncingScrollPhysics(),
-                          scrollDirection: Axis.horizontal,
-                          itemCount: _viewModel.bestOfAllYearGames.length,
-                          itemBuilder: (context, index) {
-                            if (_viewModel.bestOfAllYearGames[index] != null) {
-                              return RecommendedGameCard(
-                                gameModel: _viewModel.bestOfAllYearGames[index]!,
-                                width: context.dynamicWidth(0.925),
-                                height: context.dynamicHeight(0.245),
-                              );
-                            } else {
-                              return buildRecommendedCardShimmer(context);
-                            }
-                          }),
-                    );
-                  } else {
+                  if(_viewModel.loadingBestOfAllYearGames){
                     return buildRecommendedCardShimmer(context);
                   }
+                  return Container(
+                    width: context.screenWidth,
+                    height: context.dynamicHeight(0.3),
+                    child: ListView.builder(
+                        cacheExtent: context.screenWidth * 4,
+                        physics: BouncingScrollPhysics(),
+                        scrollDirection: Axis.horizontal,
+                        itemCount: _viewModel.bestOfAllYearGames.length,
+                        itemBuilder: (context, index) {
+                          if (_viewModel.bestOfAllYearGames[index] != null) {
+                            return RecommendedGameCard(
+                              gameModel: _viewModel.bestOfAllYearGames[index]!,
+                              width: context.dynamicWidth(0.925),
+                              height: context.dynamicHeight(0.245),
+                            );
+                          } else {
+                            return buildRecommendedCardShimmer(context);
+                          }
+                        }),
+                  );
                 },
               ),
             ),
@@ -154,7 +156,7 @@ class _HomePageViewState extends State<HomePageView> {
                     height: 80,
                     child: Observer(
                       builder: (_) {
-                        if (_viewModel.allGenres.isEmpty) {
+                        if (_viewModel.loadingAllGenres) {
                           return buildGenresShimmer();
                         } else {
                           return ListView.separated(
@@ -202,38 +204,38 @@ class _HomePageViewState extends State<HomePageView> {
                     height: context.dynamicHeight(0.3),
                     child: Observer(
                       builder: (_) {
-                        if (_viewModel.bestOfLastMonths.isNotEmpty) {
-                          return ListView.separated(
-                              physics: BouncingScrollPhysics(),
-                              scrollDirection: Axis.horizontal,
-                              cacheExtent: context.screenWidth * 5,
-                              itemCount: _viewModel.bestOfLastMonths.length + 2,
-                              separatorBuilder: (context, index) {
-                                return SizedBox(width: context.lowValue);
-                              },
-                              itemBuilder: (context, index) {
-                                if (index == 0 || index == _viewModel.bestOfLastMonths.length + 1) {
-                                  return SizedBox(
-                                    width: context.lowValue,
-                                  );
-                                }
-                                if (_viewModel.bestOfLastMonths[index - 1] != null) {
-                                  return GameCard(
-                                    gameModel: _viewModel.bestOfLastMonths[index - 1]!,
-                                  );
-                                } else {
-                                  return SizedBox();
-                                }
-                              });
-                        } else {
+                        if(_viewModel.loadingBestOfLastMonths){
                           return buildGameCardShimmer();
                         }
+                        return ListView.separated(
+                            physics: BouncingScrollPhysics(),
+                            scrollDirection: Axis.horizontal,
+                            cacheExtent: context.screenWidth * 5,
+                            itemCount: _viewModel.bestOfLastMonths.length + 2,
+                            separatorBuilder: (context, index) {
+                              return SizedBox(width: context.lowValue);
+                            },
+                            itemBuilder: (context, index) {
+                              if (index == 0 || index == _viewModel.bestOfLastMonths.length + 1) {
+                                return SizedBox(
+                                  width: context.lowValue,
+                                );
+                              }
+                              if (_viewModel.bestOfLastMonths[index - 1] != null) {
+                                return GameCard(
+                                  gameModel: _viewModel.bestOfLastMonths[index - 1]!,
+                                );
+                              } else {
+                                return SizedBox();
+                              }
+                            });
                       },
                     ),
                   ),
                 ],
               ),
             ),
+
             //Best Of Last Year Games
             Padding(
               padding: context.paddingOnlyTopHigh,
@@ -253,38 +255,37 @@ class _HomePageViewState extends State<HomePageView> {
                     height: context.dynamicHeight(0.3),
                     child: Observer(
                       builder: (_) {
-                        if (_viewModel.bestOfLastYear.isNotEmpty) {
-                          return ListView.separated(
-                              physics: BouncingScrollPhysics(),
-                              scrollDirection: Axis.horizontal,
-                              cacheExtent: context.screenWidth * 5,
-                              itemCount: _viewModel.bestOfLastYear.length + 2,
-                              separatorBuilder: (context, index) {
-                                return SizedBox(width: context.lowValue);
-                              },
-                              itemBuilder: (context, index) {
-                                if (index == 0 || index == _viewModel.bestOfLastYear.length + 1) {
-                                  return SizedBox(
-                                    width: context.lowValue,
-                                  );
-                                }
-
-                                if (_viewModel.bestOfLastYear[index - 1] != null) {
-                                  return Align(child: GameCard(gameModel: _viewModel.bestOfLastYear[index - 1]!));
-                                } else {
-                                  return SizedBox();
-                                }
-                              });
-                        } else {
-                          // TODO TODO TODO ASDAWESEFGAWSDQWEQWE
+                        if(_viewModel.loadingBestOfLastYear){
                           return buildGameCardShimmer();
                         }
+                        return ListView.separated(
+                            physics: BouncingScrollPhysics(),
+                            scrollDirection: Axis.horizontal,
+                            cacheExtent: context.screenWidth * 5,
+                            itemCount: _viewModel.bestOfLastYear.length + 2,
+                            separatorBuilder: (context, index) {
+                              return SizedBox(width: context.lowValue);
+                            },
+                            itemBuilder: (context, index) {
+                              if (index == 0 || index == _viewModel.bestOfLastYear.length + 1) {
+                                return SizedBox(
+                                  width: context.lowValue,
+                                );
+                              }
+
+                              if (_viewModel.bestOfLastYear[index - 1] != null) {
+                                return Align(child: GameCard(gameModel: _viewModel.bestOfLastYear[index - 1]!));
+                              } else {
+                                return SizedBox();
+                              }
+                            });
                       },
                     ),
                   ),
                 ],
               ),
             ),
+
             //Best Of All Year Games
             Padding(
               padding: context.paddingOnlyTopHigh,
@@ -304,37 +305,38 @@ class _HomePageViewState extends State<HomePageView> {
                     height: context.dynamicHeight(0.3),
                     child: Observer(
                       builder: (_) {
-                        if (_viewModel.bestOfAllYearGames.isNotEmpty) {
-                          return ListView.separated(
-                              physics: BouncingScrollPhysics(),
-                              scrollDirection: Axis.horizontal,
-                              cacheExtent: context.screenWidth * 5,
-                              itemCount: _viewModel.bestOfAllYearGames.length + 2,
-                              separatorBuilder: (context, index) {
-                                return SizedBox(width: context.lowValue);
-                              },
-                              itemBuilder: (context, index) {
-                                if (index == 0 || index == _viewModel.bestOfAllYearGames.length + 1) {
-                                  return SizedBox(
-                                    width: context.lowValue,
-                                  );
-                                }
-
-                                if (_viewModel.bestOfAllYearGames[index - 1] != null) {
-                                  return Align(child: GameCard(gameModel: _viewModel.bestOfAllYearGames[index - 1]!));
-                                } else {
-                                  return SizedBox();
-                                }
-                              });
-                        } else {
+                        if(_viewModel.loadingBestOfAllYearGames){
                           return buildGameCardShimmer();
                         }
+                        return ListView.separated(
+                            physics: BouncingScrollPhysics(),
+                            scrollDirection: Axis.horizontal,
+                            cacheExtent: context.screenWidth * 5,
+                            itemCount: _viewModel.bestOfAllYearGames.length + 2,
+                            separatorBuilder: (context, index) {
+                              return SizedBox(width: context.lowValue);
+                            },
+                            itemBuilder: (context, index) {
+                              if (index == 0 || index == _viewModel.bestOfAllYearGames.length + 1) {
+                                return SizedBox(
+                                  width: context.lowValue,
+                                );
+                              }
+
+                              if (_viewModel.bestOfAllYearGames[index - 1] != null) {
+                                return Align(child: GameCard(gameModel: _viewModel.bestOfAllYearGames[index - 1]!));
+                              } else {
+                                return SizedBox();
+                              }
+                            });
                       },
                     ),
                   ),
                 ],
               ),
             ),
+
+
             SizedBox(height: context.mediumValue)
           ],
         ),
