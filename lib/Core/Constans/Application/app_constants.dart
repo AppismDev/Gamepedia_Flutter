@@ -27,6 +27,9 @@ class AppConstants {
   String _playStoreAppLink = "http://play.google.com/store/apps/details?id=";
   String _twitchAndroidPackageName = "tv.twitch.android.app";
 
+  //Redirect Link URLs
+  String get _twitchGameWEBURL => "https://www.twitch.tv/directory/game";
+
   String get GAMES_ENDPOINT => API_BASE_URL + "/games";
   String get COVER_ENDPOINT => API_BASE_URL + "/cover";
   String get SCREENSHOTS_ENDPOINT => API_BASE_URL + "/screenshots";
@@ -55,5 +58,6 @@ class AppConstants {
   String getYoutubeVideoUrl(String videoID) => YOUTUBE_VIDEO_URL + "${videoID}";
   String getYoutubeVideoThumbnailUrl(String videoID) => YOUTUBE_VIDEO_THUMBNAIL_URL + "/${videoID}/hqdefault.jpg";
   String getTwitchGameLink(String gameName) => _baseTwitchGameLink + "/${gameName}";
+  String getTwitchGameWEBURL(String name) => _twitchGameWEBURL + "/${Uri.encodeComponent(name)}";
 
 }

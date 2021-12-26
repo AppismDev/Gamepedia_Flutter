@@ -14,6 +14,7 @@ import 'package:gamepedia/Views/VideoPage/View/video_page.dart';
 import 'package:gamepedia/Widgets/Clipper/arc_clipper.dart';
 import 'package:gamepedia/Widgets/Logo/gamepedia_logo.dart';
 import 'package:gamepedia/Widgets/PlatformChip/platform_chip.dart';
+import 'package:gamepedia/Widgets/TwitchDialog/twitch_dialog.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -418,45 +419,28 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
   ElevatedButton buildTwitchButton(BuildContext context, GameModel gameModel) {
     return ElevatedButton(
       onPressed: () async {
-        if (await canLaunch(_appConstants.baseTwitchLink)) {
-          if (gameModel.name != null) {
-            await launch(_appConstants.getTwitchGameLink(gameModel.name!));
-          } else {
-            //TODO hata mesajları özelleştirilecek
-            print("Oyun Twitchte Açılırken bir hata oluştu");
-          }
-        } else {
-          //TODO i18n ;) yapılacak ve tasarım değiştirilecek
-          showDialog(
-            context: context,
-            builder: (context) {
-              return AlertDialog(
-                title: Text("Uygulama Bulunamadı"),
-                content: Text.rich(TextSpan(children: [
-                  TextSpan(text: "Twitch uygulaması bu cihazda bulunamadı."),
-                  WidgetSpan(
-                      child: InkWell(
-                    onTap: () async {
-                      if (await canLaunch(_appConstants.getTwitchPlayStoreDeepLink)) {
-                        Navigator.pop(context);
-                        await launch(_appConstants.getTwitchPlayStoreDeepLink);
-                      } else {
-                        Navigator.pop(context);
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: Text("Yönlendirme yapılırken bir hata oluştu. Daha sonra tekrar deneyin")));
-                      }
-                    },
-                    child: Text(
-                      "Buradan",
-                      style: context.textTheme.subtitle1!.copyWith(color: Colors.blue[900]),
-                    ),
-                  )),
-                  TextSpan(text: " uygulamayı indirebilirsiniz."),
-                ])),
-              );
-            },
-          );
-        }
+        showDialog(
+          context: context,
+          builder: (context) {
+            return TwitchDialog(
+              onAccept: () async {
+                if (await canLaunch(_appConstants.baseTwitchLink)) {
+                  if (gameModel.name != null) {
+                    await launch(_appConstants.getTwitchGameLink(gameModel.name!));
+                  }
+                } else {
+                  //TODO i18n ;) yapılacak ve tasarım değiştirilecek
+
+                  String twitchWebURL = _appConstants.getTwitchGameWEBURL(gameModel.name!);
+
+                  if (await canLaunch(twitchWebURL)) {
+                    await launch(twitchWebURL);
+                  }
+                }
+              },
+            );
+          },
+        );
       },
       child: Center(
         child: Icon(
