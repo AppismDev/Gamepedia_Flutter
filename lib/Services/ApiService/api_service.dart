@@ -6,21 +6,21 @@ import 'package:gamepedia/Models/ApiModels/cover_model.dart';
 import 'package:gamepedia/Models/ApiModels/game_model.dart';
 import 'package:gamepedia/Models/ApiModels/genre_lite_model.dart';
 import 'package:gamepedia/Models/ApiModels/screenshot_model.dart';
+import 'package:gamepedia/Models/ApiModels/search_model.dart';
 import 'package:gamepedia/Models/ApiModels/theme_model.dart';
 import 'package:gamepedia/Models/ApiModels/token_info.dart';
 import 'package:gamepedia/Services/ApiService/i_api_service.dart';
 import 'package:http/http.dart' as http;
 
 class ApiService extends IApiService {
-  
   ApiService._privateConstructor();
-  static final ApiService _instance = ApiService._privateConstructor();
-  static  ApiService get instance => _instance;
 
+  static final ApiService _instance = ApiService._privateConstructor();
+
+  static ApiService get instance => _instance;
 
   String? accessToken;
   final AppConstants _appConstants = AppConstants.instance;
-
 
   @override
   Future<TokenInfo?> getTokenInfo() async {
@@ -146,12 +146,10 @@ class ApiService extends IApiService {
     }
   }
 
-
   @override
-  Future<List<GenreLiteModel>?> getAllGenres() async{
+  Future<List<GenreLiteModel>?> getAllGenres() async {
     try {
-
-      Uri url = Uri.parse(_appConstants.GENRES_ENDPOINT+'/allGenres');
+      Uri url = Uri.parse(_appConstants.GENRES_ENDPOINT + '/allGenres');
 
       if (accessToken == null) {
         throw Exception("Token Not be Null");
@@ -179,10 +177,8 @@ class ApiService extends IApiService {
     }
   }
 
-
-
   @override
-  Future<List<CoverModel>?> getCover(String idString) async{
+  Future<List<CoverModel>?> getCover(String idString) async {
     try {
       Uri url = Uri.parse(_appConstants.getCoverUrl(idString));
 
@@ -214,7 +210,7 @@ class ApiService extends IApiService {
   }
 
   @override
-  Future<List<ScreenshotsModel>?> getScreenShots(String idString) async{
+  Future<List<ScreenshotsModel>?> getScreenShots(String idString) async {
     try {
       Uri url = Uri.parse(_appConstants.getScreenshotsUrl(idString));
 
@@ -243,11 +239,10 @@ class ApiService extends IApiService {
       print("[HATA] [ApiService] [getScreenShots] --> " + e.toString());
       return null;
     }
-
   }
 
   @override
-  Future<List<ArtworkModel>?> getArtWorks(String idString) async{
+  Future<List<ArtworkModel>?> getArtWorks(String idString) async {
     try {
       Uri url = Uri.parse(_appConstants.getArtworksUrl(idString));
 
@@ -308,10 +303,38 @@ class ApiService extends IApiService {
       print("[HATA] [ApiService] [getArtWorks] --> " + e.toString());
       return null;
     }
-
   }
 
+  @override
+  Future<List<GameModel>?> searchGames(String searchText) async {
+    try {
+      Uri url = Uri.parse(_appConstants.getSearchUrl(searchText));
 
+      if (accessToken == null) {
+        throw Exception("Token Not be Null");
+      }
 
+      Map<String, String> headers = {'Authorization': 'token=' + accessToken!};
 
+      http.Response response = await http.get(url, headers: headers);
+
+      if (response.statusCode == 200) {
+        List<GameModel> searchModels = [];
+        List body = jsonDecode(response.body);
+
+        body.forEach((searchElement) {
+          searchModels.add(GameModel.fromJson(searchElement));
+        });
+
+        return searchModels;
+      } else {
+        print("[HATA] [ApiService] [searchGames] --> " + response.statusCode.toString());
+        print(response.body);
+        return null;
+      }
+    } catch (e) {
+      print("[HATA] [ApiService] [searchGames] --> " + e.toString());
+      return null;
+    }
+  }
 }
