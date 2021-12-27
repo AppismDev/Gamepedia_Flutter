@@ -33,17 +33,6 @@ class PlatformChip extends StatelessWidget {
         ),
         elevation: 16,
         backgroundColor: Colors.primaries[colorIndex%Colors.primaries.length],
-        avatar: CachedNetworkImage(
-          imageUrl: _appConstants.getImageUrl(
-              platform.platformLogo!.imageId!, ImageSize.THUMB),
-          imageBuilder: (context, imageProvider) {
-            return CircleAvatar(
-              backgroundImage: imageProvider,
-            );
-
-          },
-          fit: BoxFit.contain,
-        ),
       ),
     );
   }

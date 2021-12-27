@@ -20,7 +20,9 @@ class AppConstants {
 
   // API URLs
   String get API_BASE_URL => dotenv.env['API_BASE_URL']!;
+  String get API_LOCAL_URL => dotenv.env['API_LOCAL_URL']!;
   String get IMAGE_UPLOADS_URL => "https://images.igdb.com/igdb/image/upload";
+
 
   //Deep Link URLs
   String _baseTwitchGameLink = "twitch://game/";
@@ -59,5 +61,6 @@ class AppConstants {
   String getYoutubeVideoThumbnailUrl(String videoID) => YOUTUBE_VIDEO_THUMBNAIL_URL + "/${videoID}/hqdefault.jpg";
   String getTwitchGameLink(String gameName) => _baseTwitchGameLink + "/${gameName}";
   String getTwitchGameWEBURL(String name) => _twitchGameWEBURL + "/${Uri.encodeComponent(name)}";
+  String getSearchUrl(String search) => GAMES_ENDPOINT + "/search?game=$search";
 
 }

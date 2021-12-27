@@ -13,6 +13,7 @@ import 'package:gamepedia/Views/ImageViewerPage/View/image_viewer_page.dart';
 import 'package:gamepedia/Views/VideoPage/View/video_page.dart';
 import 'package:gamepedia/Widgets/Clipper/arc_clipper.dart';
 import 'package:gamepedia/Widgets/Logo/gamepedia_logo.dart';
+import 'package:gamepedia/Widgets/Painter/details_page_image_shadow_painter.dart';
 import 'package:gamepedia/Widgets/PlatformChip/platform_chip.dart';
 import 'package:gamepedia/Widgets/TwitchDialog/twitch_dialog.dart';
 import 'package:shimmer/shimmer.dart';
@@ -121,31 +122,41 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
       child: Stack(
         alignment: Alignment.topCenter,
         children: [
-          ClipPath(
-            clipper: ProfileClipper(),
-            clipBehavior: Clip.antiAlias,
-            child: Container(
-              width: context.screenWidth,
-              height: (context.safeScreenHeight / 2.1) - context.appBarHeight,
-              child: Align(
-                child: CachedNetworkImage(
-                  placeholder: (context, url) {
-                    return mainImagePlaceholder(context);
-                  },
-                  imageUrl: "${_appConstants.getImageUrl(widget.gameModel.cover!.imageId!, ImageSize.SCREENSHOT_HUGE)}",
-                  imageBuilder: (context, imageProvider) => Container(
-                    child: ClipRRect(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.0),
+          CustomPaint(
+            painter: DetailsPageImageShadowPainter(),
+            child: ClipPath(
+              clipper: ProfileClipper(),
+              clipBehavior: Clip.antiAlias,
+              child: Container(
+                color: context.theme.scaffoldBackgroundColor,
+                width: context.screenWidth,
+                height: (context.safeScreenHeight / 2.1) - context.appBarHeight,
+                child: Align(
+                  child: widget.gameModel.cover == null || widget.gameModel.cover!.imageId == null
+                      ? Container(
+                          child: GamepediaLogo(
+                          size: 30,
+                        ))
+                      : CachedNetworkImage(
+                          placeholder: (context, url) {
+                            return mainImagePlaceholder(context);
+                          },
+                          imageUrl:
+                              "${_appConstants.getImageUrl(widget.gameModel.cover!.imageId!, ImageSize.SCREENSHOT_HUGE)}",
+                          imageBuilder: (context, imageProvider) => Container(
+                            child: ClipRRect(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(0.0),
+                                ),
+                              ),
+                            ),
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                  image: imageProvider, alignment: Alignment.topCenter, fit: BoxFit.fitHeight),
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                    decoration: BoxDecoration(
-                      image:
-                          DecorationImage(image: imageProvider, alignment: Alignment.topCenter, fit: BoxFit.fitHeight),
-                    ),
-                  ),
                 ),
               ),
             ),
@@ -201,21 +212,21 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
     );
   }
 
-  Column buildPlatforms(BuildContext context, GameModel gameModel) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-            // padding: const EdgeInsets.all(8.0),
-            padding: EdgeInsets.only(left: context.mediumValue, top: context.mediumValue),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                "Platforms",
-                style: context.textTheme.headline6,
-              ),
-            )),
-        if (gameModel.platforms != null)
+  Widget buildPlatforms(BuildContext context, GameModel gameModel) {
+    if (gameModel.platforms != null) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+              // padding: const EdgeInsets.all(8.0),
+              padding: EdgeInsets.only(left: context.mediumValue, top: context.mediumValue),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "Platforms",
+                  style: context.textTheme.headline6,
+                ),
+              )),
           Container(
             height: 100,
             child: ListView(
@@ -233,11 +244,12 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
                   itemBuilder: (context, index) {
                     if (gameModel.platforms![index] == null) {
                       return SizedBox();
+                    } else {
+                      return PlatformChip(
+                        platform: gameModel.platforms![index]!,
+                        colorIndex: index,
+                      );
                     }
-                    return PlatformChip(
-                      platform: gameModel.platforms![index]!,
-                      colorIndex: index,
-                    );
                   },
                 ),
                 SizedBox(
@@ -246,73 +258,81 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
               ],
             ),
           )
-        else
-          SizedBox()
-      ],
-    );
+        ],
+      );
+    } else {
+      return SizedBox();
+    }
   }
 
   Padding buildStoryLine(BuildContext context, GameModel gameModel) {
-    return Padding(
-      padding: context.paddingHorizontalHigh,
-      child: Observer(
-        builder: (context) {
-          if (_viewModel.isSeeMoreOpen) {
-            return GestureDetector(
-              onTap: () => _viewModel.setIsSeeMoreOpen(!_viewModel.isSeeMoreOpen),
-              child: Text.rich(
-                TextSpan(
-                  children: [
-                    TextSpan(text: "${gameModel.storyline ?? gameModel.summary} "),
-                    WidgetSpan(
-                      child: InkWell(
+    if (gameModel.storyline == null && gameModel.summary == null) {
+      return Padding(
+        padding: context.paddingHorizontalHigh,
+        child: Text("Bu oyun hakkında bir detay bulunamadı."),
+      );
+    } else {
+      return Padding(
+        padding: context.paddingHorizontalHigh,
+        child: Observer(
+          builder: (context) {
+            if (_viewModel.isSeeMoreOpen) {
+              return GestureDetector(
+                onTap: () => _viewModel.setIsSeeMoreOpen(!_viewModel.isSeeMoreOpen),
+                child: Text.rich(
+                  TextSpan(
+                    children: [
+                      TextSpan(text: "${gameModel.storyline ?? gameModel.summary} "),
+                      WidgetSpan(
+                        child: InkWell(
+                          child: Text(
+                            "Daralt", // TODO Locazilation Yapılacak
+                            style: context.textTheme.bodyText1!.copyWith(color: context.lightThemeData.primaryColor),
+                          ),
+                          onTap: () {
+                            _viewModel.setIsSeeMoreOpen(false);
+                          },
+                        ),
+                      ),
+                      // TextSpan(
+                      //   text: 'bold',
+                      //   style: TextStyle(fontWeight: FontWeight.bold),
+                      // ),
+                    ],
+                  ),
+                ),
+              );
+            } else {
+              return GestureDetector(
+                onTap: () => _viewModel.setIsSeeMoreOpen(!_viewModel.isSeeMoreOpen),
+                child: Text.rich(
+                  TextSpan(
+                    children: [
+                      TextSpan(text: "${gameModel.storyline?.getLimitedText ?? gameModel.summary?.getLimitedText}... "),
+                      WidgetSpan(
                         child: Text(
-                          "Daralt", // TODO Locazilation Yapılacak
+                          "Daha Fazla Gör", // TODO: Localization Yapılacak
                           style: context.textTheme.bodyText1!.copyWith(color: context.lightThemeData.primaryColor),
                         ),
-                        onTap: () {
-                          _viewModel.setIsSeeMoreOpen(false);
-                        },
                       ),
-                    ),
-                    // TextSpan(
-                    //   text: 'bold',
-                    //   style: TextStyle(fontWeight: FontWeight.bold),
-                    // ),
-                  ],
+                      // TextSpan(
+                      //   text: 'bold',
+                      //   style: TextStyle(fontWeight: FontWeight.bold),
+                      // ),
+                    ],
+                  ),
                 ),
-              ),
-            );
-          } else {
-            return GestureDetector(
-              onTap: () => _viewModel.setIsSeeMoreOpen(!_viewModel.isSeeMoreOpen),
-              child: Text.rich(
-                TextSpan(
-                  children: [
-                    TextSpan(text: "${gameModel.storyline?.getLimitedText ?? gameModel.summary?.getLimitedText}... "),
-                    WidgetSpan(
-                      child: Text(
-                        "Daha Fazla Gör", // TODO: Localization Yapılacak
-                        style: context.textTheme.bodyText1!.copyWith(color: context.lightThemeData.primaryColor),
-                      ),
-                    ),
-                    // TextSpan(
-                    //   text: 'bold',
-                    //   style: TextStyle(fontWeight: FontWeight.bold),
-                    // ),
-                  ],
-                ),
-              ),
-            );
-          }
-        },
-      ),
-      // child: Text(
-      //   "${gameModel.storyline?.substring(0, 300) ?? gameModel.summary?.substring(0, 50)}",
-      //   style: context.textTheme.subtitle1,
-      //   textAlign: TextAlign.center,
-      // ),
-    );
+              );
+            }
+          },
+        ),
+        // child: Text(
+        //   "${gameModel.storyline?.substring(0, 300) ?? gameModel.summary?.substring(0, 50)}",
+        //   style: context.textTheme.subtitle1,
+        //   textAlign: TextAlign.center,
+        // ),
+      );
+    }
   }
 
   Row buildInfoBannerWidget(BuildContext context, GameModel gameModel) {
@@ -328,7 +348,9 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
                 style: context.textTheme.subtitle2,
               ),
               Text(
-                DateTime.fromMillisecondsSinceEpoch(gameModel.firstReleaseDate! * 1000).year.toString(),
+                gameModel.firstReleaseDate == null
+                    ? "-"
+                    : DateTime.fromMillisecondsSinceEpoch(gameModel.firstReleaseDate! * 1000).year.toString(),
                 style: context.textTheme.headline6!.copyWith(fontSize: 19),
               ),
             ],
@@ -343,7 +365,7 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
                 style: context.textTheme.subtitle2,
               ),
               Text(
-                "${gameModel.rating!.toInt()} / 100",
+                "${gameModel.rating == null ? "-" : gameModel.rating!.toInt()} / 100",
                 style: context.textTheme.headline6!.copyWith(fontSize: 19),
               ),
             ],
@@ -382,9 +404,11 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
                 padding: context.paddingOnlyLeftLow,
                 child: Icon(
                   FontAwesome5Solid.star,
-                  color: index >= (gameModel.rating! / 20).roundToDouble()
+                  color: gameModel.rating == null
                       ? context.theme.iconTheme.color
-                      : context.theme.primaryIconTheme.color,
+                      : index >= (gameModel.rating! / 20).roundToDouble()
+                          ? context.theme.iconTheme.color
+                          : context.theme.primaryIconTheme.color,
                 ),
               );
             }),
@@ -397,7 +421,8 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
       return Padding(
           padding: context.paddingOnlyTopLow,
           child: Wrap(
-            children: List.generate(gameModel.genres!.length, (i) => Text("${gameModel.genres![i]!.name}")),
+            children: List.generate(gameModel.genres!.length,
+                (i) => gameModel.genres![i] == null ? SizedBox() : Text("${gameModel.genres![i]!.name}")),
           ));
     } else {
       return SizedBox();
@@ -600,7 +625,6 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
   AppBar buildAppBar() {
     return AppBar(
       centerTitle: true,
-      actions: [IconButton(onPressed: () {}, icon: Icon(Icons.search))],
       title: GamepediaLogo(
         size: 18,
       ),
