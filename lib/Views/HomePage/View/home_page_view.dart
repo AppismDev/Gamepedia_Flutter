@@ -399,19 +399,21 @@ class _HomePageViewState extends State<HomePageView> {
               width: context.lowValue,
             );
           } else {
-            return Shimmer.fromColors(
-              baseColor:
-                  context.currentAppThemeEnum == ThemeEnums.DARK_MODE ? Colors.grey.shade900 : Colors.grey.shade300,
-              highlightColor:
-                  context.currentAppThemeEnum == ThemeEnums.DARK_MODE ? Colors.grey.shade800 : Colors.grey.shade200,
-              child: Align(
-                child: Container(
-                  height: 44,
-                  width: 150,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(18),
-                      color: context.theme.primaryColor.withAlpha(160),
-                      border: Border.all(color: context.theme.primaryColor, width: 3)),
+            return Align(
+              child: Shimmer.fromColors(
+                baseColor:
+                    context.currentAppThemeEnum == ThemeEnums.DARK_MODE ? Colors.grey.shade900 : Colors.grey.shade300,
+                highlightColor:
+                    context.currentAppThemeEnum == ThemeEnums.DARK_MODE ? Colors.grey.shade800 : Colors.grey.shade200,
+                child: Align(
+                  child: Container(
+                    height: 44,
+                    width: 150,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(18),
+                        color: context.theme.primaryColor.withAlpha(160),
+                        border: Border.all(color: context.theme.primaryColor, width: 3)),
+                  ),
                 ),
               ),
             );

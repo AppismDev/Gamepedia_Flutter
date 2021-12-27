@@ -22,6 +22,7 @@ import 'package:url_launcher/url_launcher.dart';
 class GameDetailsPage extends StatefulWidget {
   GameModel gameModel;
 
+
   GameDetailsPage({Key? key, required this.gameModel}) : super(key: key);
 
   @override

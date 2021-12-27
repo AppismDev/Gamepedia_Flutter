@@ -35,6 +35,14 @@ abstract class _SearchPageViewModelBase with Store {
   }
 
 
+  void clearSearchText(){
+    query = "";
+    controller.clear();
+    searchedGames.clear();
+    isQueryFinished = true;
+  }
+
+
 
   //TODO aramada çıkan hatalara bakılacak
   void searchGames() async {

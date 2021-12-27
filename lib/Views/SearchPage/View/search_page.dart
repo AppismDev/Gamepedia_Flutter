@@ -34,8 +34,16 @@ class _SearchPageState extends State<SearchPage> {
       child: Column(
         children: [
           Padding(
-            padding: context.paddingAllLow,
+            padding: EdgeInsets.symmetric(horizontal: context.mediumValue, vertical: context.lowValue),
+            child: Text(
+              "Bulmak İstediğiniz Oyunu Arayın",
+              style: context.textTheme.headline5?.copyWith(fontWeight: FontWeight.bold),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: context.lowValue, horizontal: context.mediumValue),
             child: TextField(
+              controller: _viewModel.controller,
               textInputAction: TextInputAction.search,
               onSubmitted: (value) {
                 _viewModel.searchGames();
@@ -44,17 +52,18 @@ class _SearchPageState extends State<SearchPage> {
                 _viewModel.query = value;
               },
               decoration: InputDecoration(
+                hintText: 'Oyun Arayın',
                 suffixIcon: IconButton(
-                  onPressed: () {
-                    _viewModel.query = "";
-                  },
-                  icon: Icon(Icons.close),
-                ),
-                prefixIcon: IconButton(
                   onPressed: () {
                     _viewModel.searchGames();
                   },
                   icon: Icon(Icons.search),
+                ),
+                prefixIcon: IconButton(
+                  onPressed: () {
+                    _viewModel.clearSearchText();
+                  },
+                  icon: Icon(Icons.close),
                 ),
               ),
             ),
@@ -78,53 +87,50 @@ class _SearchPageState extends State<SearchPage> {
                   }
                 }
               } else {
-                return SingleChildScrollView(
-                  physics: BouncingScrollPhysics(),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      if (_viewModel.isLoading) ...[
-                        Padding(
-                          padding: context.paddingAllLow,
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                "Sonuçlar Aranıyor",
-                                style: context.textTheme.subtitle1!.copyWith(fontWeight: FontWeight.bold),
-                              ),
-                              Center(
-                                  child: Padding(
-                                padding: context.paddingHorizontalLow,
-                                child: SizedBox(width: 15, height: 15, child: CircularProgressIndicator()),
-                              )),
-                            ],
-                          ),
-                        )
-                      ] else ...[
-                        Padding(
-                          padding: context.paddingAllLow,
-                          child: Text(
-                            "Search Result (${_viewModel.searchedGames.length})",
-                            style: context.textTheme.subtitle1!.copyWith(fontWeight: FontWeight.bold),
-                          ),
-                        )
-                      ],
-                      ListView.builder(
-                        physics: NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: _viewModel.searchedGames.length,
-                        itemBuilder: (context, index) {
-                          GameModel? _currentGame = _viewModel.searchedGames[index];
-                          if (_currentGame != null) {
-                            return GameSearchCard(gameModel: _currentGame);
-                          } else {
-                            return SizedBox();
-                          }
-                        },
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (_viewModel.isLoading) ...[
+                      Padding(
+                        padding: context.paddingAllLow,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Sonuçlar Aranıyor",
+                              style: context.textTheme.subtitle1!.copyWith(fontWeight: FontWeight.bold),
+                            ),
+                            Center(
+                                child: Padding(
+                              padding: context.paddingHorizontalLow,
+                              child: SizedBox(width: 15, height: 15, child: CircularProgressIndicator()),
+                            )),
+                          ],
+                        ),
+                      )
+                    ] else ...[
+                      Padding(
+                        padding: context.paddingAllLow,
+                        child: Text(
+                          "Search Result (${_viewModel.searchedGames.length})",
+                          style: context.textTheme.subtitle1!.copyWith(fontWeight: FontWeight.bold),
+                        ),
                       )
                     ],
-                  ),
+                    ListView.builder(
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: _viewModel.searchedGames.length,
+                      itemBuilder: (context, index) {
+                        GameModel? _currentGame = _viewModel.searchedGames[index];
+                        if (_currentGame != null) {
+                          return GameSearchCard(gameModel: _currentGame);
+                        } else {
+                          return SizedBox();
+                        }
+                      },
+                    )
+                  ],
                 );
               }
             },
