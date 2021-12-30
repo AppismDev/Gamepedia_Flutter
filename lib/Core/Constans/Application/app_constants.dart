@@ -62,5 +62,6 @@ class AppConstants {
   String getTwitchGameLink(String gameName) => _baseTwitchGameLink + "/${gameName}";
   String getTwitchGameWEBURL(String name) => _twitchGameWEBURL + "/${Uri.encodeComponent(name)}";
   String getSearchUrl(String search) => GAMES_ENDPOINT + "/search?game=$search";
+  String getGenreFilterUrl(String genres) => GAMES_ENDPOINT + "/genres?genres=${genres}";
 
 }
