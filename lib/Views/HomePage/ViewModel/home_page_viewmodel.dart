@@ -26,6 +26,7 @@ abstract class _HomePageViewModelBase with Store {
 
   @action
   Future<void> getBestOfAllYearGames() async {
+    bestOfAllYearGames.clear();
     _loadingBestOfAllYearGames = true;
     List<GameModel?>? games;
     games = await _apiService.getBestOfAllTime();
@@ -47,6 +48,8 @@ abstract class _HomePageViewModelBase with Store {
 
   @action
   Future<void> getBestOfLastMonths() async {
+    bestOfLastMonths.clear();
+
     _loadingBestOfLastMonths = true;
     List<GameModel?>? games;
     games = await _apiService.getBestOfLastMonths();
@@ -61,6 +64,13 @@ abstract class _HomePageViewModelBase with Store {
   ObservableList<GameModel?> bestOfLastYear = ObservableList();
 
   @observable
+  ObservableList<ThemeModel?> selectedThemeModels = ObservableList();
+
+  @observable
+  ObservableList<GenreLiteModel?> selectedGenreModels = ObservableList();
+
+
+  @observable
   bool _loadingBestOfLastYear = true;
 
   @computed
@@ -68,6 +78,8 @@ abstract class _HomePageViewModelBase with Store {
 
   @action
   Future<void> getBestOfLastYear() async {
+    bestOfLastYear.clear();
+
     _loadingBestOfLastYear = true;
     List<GameModel?>? games;
     games = await _apiService.getBestOfLastYear();
@@ -89,6 +101,7 @@ abstract class _HomePageViewModelBase with Store {
 
   @action
   Future<void> getAllGenres() async {
+    allGenres.clear();
     _loadingAllGenres = true;
     List<GenreLiteModel?>? genres;
     genres = await _apiService.getAllGenres();
@@ -110,6 +123,7 @@ abstract class _HomePageViewModelBase with Store {
 
   @action
   Future<void> getAllThemes() async {
+    allThemes.clear();
     _loadingAllThemes = true;
     List<ThemeModel?>? themeModels;
     themeModels = await _apiService.getAllThemes();
@@ -117,6 +131,7 @@ abstract class _HomePageViewModelBase with Store {
     allThemes.addAll(themeModels);
     _loadingAllThemes = false;
   }
+
 
 // **************** ******** **************** //
 

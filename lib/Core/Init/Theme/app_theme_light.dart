@@ -27,7 +27,7 @@ class AppThemeLight implements IAppTheme{
     ),
     scaffoldBackgroundColor: Color(0xffF4F4F4),
     shadowColor: const Color(0xFF141414),
-    backgroundColor: const Color(0xFF212121),
+    backgroundColor: Colors.white,
     dividerColor: Colors.black12,
     appBarTheme: AppBarTheme(
       iconTheme: IconThemeData(color: Colors.grey.shade800),

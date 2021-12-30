@@ -14,7 +14,7 @@ import 'package:gamepedia/Views/VideoPage/View/video_page.dart';
 import 'package:gamepedia/Widgets/Clipper/arc_clipper.dart';
 import 'package:gamepedia/Widgets/Logo/gamepedia_logo.dart';
 import 'package:gamepedia/Widgets/Painter/details_page_image_shadow_painter.dart';
-import 'package:gamepedia/Widgets/PlatformChip/platform_chip.dart';
+import 'package:gamepedia/Widgets/Chips/PlatformChip/platform_chip.dart';
 import 'package:gamepedia/Widgets/TwitchDialog/twitch_dialog.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';

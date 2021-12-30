@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:gamepedia/Core/Constans/Enums/preferences_keys.dart';
 import 'package:gamepedia/Core/Init/Cache/locale_manager.dart';
 import 'package:gamepedia/Core/Init/Language/language_manager.dart';
-import 'package:provider/provider.dart';
 
 class LanguageProvider extends ChangeNotifier {
   LocaleManager _localeManager = LocaleManager.instance;

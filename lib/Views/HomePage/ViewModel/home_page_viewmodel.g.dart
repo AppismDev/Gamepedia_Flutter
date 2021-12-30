@@ -127,6 +127,38 @@ mixin _$HomePageViewModel on _HomePageViewModelBase, Store {
     });
   }
 
+  final _$selectedThemeModelsAtom =
+      Atom(name: '_HomePageViewModelBase.selectedThemeModels');
+
+  @override
+  ObservableList<ThemeModel?> get selectedThemeModels {
+    _$selectedThemeModelsAtom.reportRead();
+    return super.selectedThemeModels;
+  }
+
+  @override
+  set selectedThemeModels(ObservableList<ThemeModel?> value) {
+    _$selectedThemeModelsAtom.reportWrite(value, super.selectedThemeModels, () {
+      super.selectedThemeModels = value;
+    });
+  }
+
+  final _$selectedGenreModelsAtom =
+      Atom(name: '_HomePageViewModelBase.selectedGenreModels');
+
+  @override
+  ObservableList<GenreLiteModel?> get selectedGenreModels {
+    _$selectedGenreModelsAtom.reportRead();
+    return super.selectedGenreModels;
+  }
+
+  @override
+  set selectedGenreModels(ObservableList<GenreLiteModel?> value) {
+    _$selectedGenreModelsAtom.reportWrite(value, super.selectedGenreModels, () {
+      super.selectedGenreModels = value;
+    });
+  }
+
   final _$_loadingBestOfLastYearAtom =
       Atom(name: '_HomePageViewModelBase._loadingBestOfLastYear');
 
@@ -254,6 +286,8 @@ mixin _$HomePageViewModel on _HomePageViewModelBase, Store {
 bestOfAllYearGames: ${bestOfAllYearGames},
 bestOfLastMonths: ${bestOfLastMonths},
 bestOfLastYear: ${bestOfLastYear},
+selectedThemeModels: ${selectedThemeModels},
+selectedGenreModels: ${selectedGenreModels},
 allGenres: ${allGenres},
 allThemes: ${allThemes},
 loadingBestOfAllYearGames: ${loadingBestOfAllYearGames},

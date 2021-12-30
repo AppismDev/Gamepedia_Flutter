@@ -54,7 +54,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
       });
     });
   }
-// TODO harfler tek tek çıkacak
+// TODO harfler tek tek çıkacak animasyon düzeltilecek
   @override
   Widget build(BuildContext context) {
     return Scaffold(
