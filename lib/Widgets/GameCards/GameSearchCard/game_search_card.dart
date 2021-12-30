@@ -20,6 +20,7 @@ class GameSearchCard extends StatelessWidget {
   GameSearchCard({Key? key, required this.gameModel}) : super(key: key);
 
   AppConstants _appConstants = AppConstants.instance;
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -31,68 +32,73 @@ class GameSearchCard extends StatelessWidget {
         },
         duration: Duration(milliseconds: 100),
         child: Container(
-          //bunu vermezsek clickler düzgün çalışmıyor
           color: Colors.transparent,
-          height: context.dynamicHeight(0.22),
-          child: Row(
-            children: [
-              SizedBox(
-                width: context.dynamicWidth(0.32),
-                child: gameModel.cover == null || gameModel.cover!.imageId == null
-                    ? Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(24),
-                            color: context.currentAppThemeEnum == ThemeEnums.LIGHT_MODE
-                                ? Colors.white
-                                : Colors.grey.shade700),
-                        child: Center(
-                          child: GamepediaLogo(
-                            size: 20,
-                          ),
-                        ),
-                      )
-                    : CachedNetworkImage(
-                        placeholder: (context, url) {
-                          return GamepediaLogo();
-                        },
-                        imageUrl: "${_appConstants.getImageUrl(gameModel.cover!.imageId!, ImageSize.SCREENSHOT_HUGE)}",
-                        imageBuilder: (context, imageProvider) => Container(
-                          child: ClipRRect(
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.0),
-                              ),
+          height: context.dynamicHeight(0.21),
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              vertical: context.lowValue,
+              horizontal: context.veryLowValue
+            ),
+            child: Row(
+              children: [
+                // Cover Image
+                if(gameModel.cover != null)
+                  Container(
+                  width: 100,
+                  margin: context.paddingAllVeryLow,
+                  child: CachedNetworkImage(
+                    imageUrl: "${_appConstants.getImageUrl(gameModel.cover!.imageId!, ImageSize.COVER_BIG)}",
+                    imageBuilder: (context, imageProvider) =>
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            image: DecorationImage(
+                              image: imageProvider,
+                              fit: BoxFit.fill,
                             ),
                           ),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(24),
-                            image: DecorationImage(
-                                image: imageProvider, alignment: Alignment.topCenter, fit: BoxFit.fitHeight),
+                        ),
+                    placeholder: (c, url) {
+                      return Center(child: GamepediaLogo());
+                    },
+                    errorWidget: (context, url, error) => Icon(Icons.error),
+                  ),
+                )
+                else
+                  Container(
+                    width: 100,
+                    child: Center(child: GamepediaLogo()),
+                  ),
+
+                SizedBox(width: context.mediumValue),
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: context.paddingAllVeryLow,
+                        child: Container(
+                          width: double.infinity,
+                          child: Text(
+                            "${gameModel.name}",
+                            maxLines: 2,
+                            textAlign: TextAlign.start,
+                            overflow: TextOverflow.ellipsis,
+                            style: context.textTheme.subtitle1!.copyWith(fontWeight: FontWeight.bold),
                           ),
                         ),
-                      ),
-              ),
-              Expanded(
-                child: Container(
-                  padding: context.paddingAllMedium,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "${gameModel.name}",
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: context.textTheme.subtitle1!.copyWith(fontWeight: FontWeight.bold),
                       ),
                       if (gameModel.genres != null) ...[
                         Padding(
                           padding: context.paddingOnlyTopLow,
-                          child: Text(
-                            addAllGenres(gameModel.genres!),
-                            style: context.textTheme.subtitle2!,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
+                          child: Container(
+                            width: double.infinity,
+                            child: Text(
+                              addAllGenres(gameModel.genres!),
+                              style: context.textTheme.subtitle2!,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
                         )
                       ] else ...[
@@ -104,9 +110,10 @@ class GameSearchCard extends StatelessWidget {
                       buildScoreStartsWidget(context, gameModel)
                     ],
                   ),
-                ),
-              )
-            ],
+                )
+
+              ],
+            )
           ),
         ),
       ),
@@ -128,8 +135,8 @@ class GameSearchCard extends StatelessWidget {
                   color: searchModel.rating == null
                       ? Colors.grey.shade400
                       : index >= (searchModel.rating! / 20).roundToDouble()
-                          ? Colors.grey.shade700
-                          : Colors.orange),
+                      ? Colors.grey.shade700
+                      : Colors.orange),
             );
           }),
     );

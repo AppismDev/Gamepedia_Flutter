@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/material/theme_data.dart';
 import 'package:gamepedia/Core/Init/Theme/i_app_theme.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -14,7 +13,10 @@ class AppThemeDark implements IAppTheme {
   ThemeData? themeData;
 
   ThemeData get theme => ThemeData(
-        colorScheme: ColorScheme.fromSwatch(brightness: Brightness.dark).copyWith(secondary: Colors.red),
+        colorScheme: ColorScheme.fromSwatch(brightness: Brightness.dark).copyWith(
+            secondary: Colors.red,
+            primary: Color(0xffE50914)
+        ),
         primaryColor: Colors.black,
         shadowColor: const Color(0xFF141414),
         backgroundColor: const Color(0xFF212121),
@@ -56,17 +58,7 @@ class AppThemeDark implements IAppTheme {
               primary: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
         ),
         inputDecorationTheme: InputDecorationTheme(
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
-          contentPadding: EdgeInsets.symmetric(
-            vertical: 10,
-            horizontal: 20,
-          ),
-          labelStyle: TextStyle(
-            fontSize: 35,
-            decorationColor: Colors.red,
-          ),
-          fillColor: Colors.grey.withOpacity(0.1),
-          filled: true,
+          border: InputBorder.none
         ),
       );
 }

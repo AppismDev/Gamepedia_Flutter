@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/material/theme_data.dart';
 import 'package:gamepedia/Core/Init/Theme/i_app_theme.dart';
 import 'package:google_fonts/google_fonts.dart';
 //TODO snackbarlarda tema sorunu var bakılacak
@@ -14,7 +13,10 @@ class AppThemeLight implements IAppTheme{
 
   ThemeData get theme => ThemeData(
     colorScheme: ColorScheme.fromSwatch(brightness: Brightness.light)
-        .copyWith(secondary:  Color(0xffE50914)),
+        .copyWith(
+        secondary:  Color(0xffE50914),
+        primary: Color(0xffE50914)
+    ),
     primaryColor: Color(0xffE50914),
     brightness: Brightness.light,
     iconTheme: IconThemeData(
@@ -58,17 +60,7 @@ class AppThemeLight implements IAppTheme{
       style: ElevatedButton.styleFrom(onPrimary: Colors.grey.shade800, primary: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
     ),
     inputDecorationTheme: InputDecorationTheme(
-      border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
-      contentPadding: EdgeInsets.symmetric(
-        vertical: 10,
-        horizontal: 20,
-      ),
-      labelStyle: TextStyle(
-        fontSize: 35,
-        decorationColor: Colors.red,
-      ),
-      fillColor: Colors.grey.withOpacity(0.1),
-      filled: true,
+        border: InputBorder.none
     ),
   );
 

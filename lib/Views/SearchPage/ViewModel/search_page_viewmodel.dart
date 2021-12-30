@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:gamepedia/Models/ApiModels/game_model.dart';
 import 'package:gamepedia/Services/ApiService/api_service.dart';
@@ -10,66 +11,61 @@ class SearchPageViewModel = _SearchPageViewModelBase with _$SearchPageViewModel;
 
 abstract class _SearchPageViewModelBase with Store {
   ApiService _apiService = ApiService.instance;
-  ObservableList<GameModel?> searchedGames = ObservableList();
-  TextEditingController controller = TextEditingController();
 
-  String query = "";
-
-  String oldQuery = "";
 
   @observable
-  bool _isLoading = false;
-
-  @observable
-  bool isQueryFinished = true;
+  bool _isShowHistory = false;
 
   @computed
-  bool get isLoading => _isLoading;
+  bool get isShowHistory => _isShowHistory;
 
   @action
-  void setIsLoading(bool value) => _isLoading = value;
+  void setIsShowHistory(bool value) => _isShowHistory = value;
+
+  @observable
+  bool _isShowDiscover = true;
+
+  @computed
+  bool get isShowDiscover => _isShowDiscover;
+
+  @observable
+  String searchText = "";
 
   @action
-  void clearSearchGames() {
+  void setSearchText(String value) => searchText = value;
+
+  @observable
+  bool _loadingContent = false;
+
+  @computed
+  bool get loadingContent => _loadingContent;
+
+  @observable
+  ObservableList<GameModel> searchedGames = ObservableList();
+
+  @action
+  Future<void> searchGame() async{
+    _loadingContent = true;
+    _isShowDiscover = false;
+
     searchedGames.clear();
-  }
 
-
-  void clearSearchText(){
-    query = "";
-    controller.clear();
-    searchedGames.clear();
-    isQueryFinished = true;
-  }
-
-
-
-  //TODO aramada çıkan hatalara bakılacak
-  void searchGames() async {
-    isQueryFinished = false;
-
-    if (query.trim().isNotEmpty) {
-      if (oldQuery != query.trim()) {
-        oldQuery = query.trim();
-        setIsLoading(true);
-        List<GameModel>? searchedGamesResult = [];
-        if (query.trim().isNotEmpty) {
-          searchedGamesResult = await _apiService.searchGames(query);
-          clearSearchGames();
-          if (searchedGamesResult == null) {
-            setIsLoading(false);
-            return null;
-          }
-          searchedGames.addAll(searchedGamesResult);
-        } else {
-          clearSearchGames();
-        }
-        oldQuery = query;
-        setIsLoading(false);
-        isQueryFinished = true;
-      }
-    } else {
-      clearSearchGames();
+    if(searchText.isEmpty){
+      _isShowDiscover = true;
+      searchedGames.clear();
+      _loadingContent = false;
+      return;
     }
+
+
+    List<GameModel>? games = await _apiService.searchGames(searchText);
+
+    if(games != null){
+      searchedGames.addAll(games);
+    }
+
+
+    _loadingContent = false;
   }
+
 }

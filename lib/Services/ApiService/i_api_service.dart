@@ -19,6 +19,8 @@ abstract class IApiService{
   Future<List<GameModel>?> getBestOfLastMonths({int? page});
   Future<List<GameModel>?> getBestOfLastYear({int? page});
 
+  Future<List<GameModel>?> searchGames(String searchText);
+
   // Genres Route
   Future<List<GenreLiteModel>?> getAllGenres();
 
