@@ -5,6 +5,7 @@ import 'package:gamepedia/Core/Constans/Enums/theme_enums.dart';
 import 'package:gamepedia/Core/Extensions/context_extensions.dart';
 import 'package:gamepedia/Views/SearchPage/ViewModel/search_page_viewmodel.dart';
 import 'package:gamepedia/Widgets/Bounce/bounce.dart';
+import 'package:gamepedia/Widgets/GameCards/GameCard/game_card.dart';
 import 'package:gamepedia/Widgets/GameCards/GameSearchCard/game_search_card.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -24,6 +25,9 @@ class _SearchPageState extends State<SearchPage> {
   @override
   void initState() {
     super.initState();
+
+    _viewModel.getDiscover();
+
     _focusNode.addListener(() {
       if(_focusNode.hasFocus){
         _viewModel.setIsShowHistory(true);
@@ -228,10 +232,73 @@ class _SearchPageState extends State<SearchPage> {
             );
   }
 
-  Center buildDiscover() {
-    return Center(
-              child: Text("Discover"),
-            );
+  Widget buildDiscover() {
+    return Observer(builder: (_){
+      if(_viewModel.discover.isEmpty){
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      }else{
+        return Column(
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(
+                  horizontal: context.lowValue ,
+                  vertical: context.lowValue
+              ),
+              child: Container(
+                width: double.infinity,
+                child: Text(
+                  "Son Baktıklarım",
+                  style: context.textTheme.subtitle2!.copyWith(fontWeight: FontWeight.bold, fontSize: 16),
+                ),
+              ),
+            ),
+
+            // TODO: En son detaay sayfasına girdiği 10 oyunu bu alanda listelenecek
+            Spacer(),
+
+
+            Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: context.lowValue ,
+                vertical: context.veryLowValue
+              ),
+              child: Container(
+                width: double.infinity,
+                child: Text(
+                  "Keşfet Kuyruğu",
+                  style: context.textTheme.subtitle2!.copyWith(fontWeight: FontWeight.bold, fontSize: 16),
+                ),
+              ),
+            ),
+            Container(
+              height: context.dynamicHeight(0.3),
+              child: ListView.separated(
+                physics: BouncingScrollPhysics(),
+                scrollDirection: Axis.horizontal,
+                cacheExtent: context.screenWidth * 5,
+                separatorBuilder: (context, index) {
+                  return SizedBox(width: context.lowValue);
+                },
+                itemCount: _viewModel.discover.length + 2,
+                itemBuilder: (context,index){
+                  if (index == 0 || index == _viewModel.discover.length + 1) {
+                    return SizedBox(
+                      width: context.veryLowValue,
+                    );
+                  }
+                  return GameCard(
+                    gameModel: _viewModel.discover[index - 1],
+                  );
+                },
+              ),
+            ),
+            SizedBox(height: context.veryLowValue),
+          ],
+        );
+      }
+    });
   }
 
 }

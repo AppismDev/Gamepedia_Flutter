@@ -50,6 +50,7 @@ dependencies:
   url_launcher: ^6.0.17
   async: ^2.8.2
   collection: ^1.15.0
+  sqflite: ^2.0.1
 
 
 dev_dependencies:

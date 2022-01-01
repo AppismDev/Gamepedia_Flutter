@@ -43,6 +43,9 @@ abstract class _SearchPageViewModelBase with Store {
   @observable
   ObservableList<GameModel> searchedGames = ObservableList();
 
+  @observable
+  ObservableList<GameModel> discover = ObservableList();
+
   @action
   Future<void> searchGame() async{
     _loadingContent = true;
@@ -64,6 +67,19 @@ abstract class _SearchPageViewModelBase with Store {
       searchedGames.addAll(games);
     }
 
+
+    _loadingContent = false;
+  }
+
+  @action
+  Future<void> getDiscover() async{
+    _loadingContent = true;
+
+    List<GameModel>? games = await _apiService.getDiscoverGames();
+
+    if(games != null){
+      discover.addAll(games);
+    }
 
     _loadingContent = false;
   }

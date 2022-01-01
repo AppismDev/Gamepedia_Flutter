@@ -48,7 +48,7 @@ class ApiService extends IApiService {
   Future<List<GameModel>?> getBestOfAllTime({int? page}) async {
     try {
       page ??= 1;
-      Uri url = Uri.parse(_appConstants.getBestOfAllTimeUrl(page));
+      Uri url = Uri.parse(_appConstants.getBestOfAllTimeEndpoint(page));
 
       if (accessToken == null) {
         throw Exception("Token Not be Null");
@@ -82,7 +82,7 @@ class ApiService extends IApiService {
   Future<List<GameModel>?> getBestOfLastMonths({int? page}) async {
     try {
       page ??= 1;
-      Uri url = Uri.parse(_appConstants.getBestOfLastMonths(page));
+      Uri url = Uri.parse(_appConstants.getBestOfLastMonthsEndpoint(page));
 
       if (accessToken == null) {
         throw Exception("Token Not be Null");
@@ -116,7 +116,7 @@ class ApiService extends IApiService {
   Future<List<GameModel>?> getBestOfLastYear({int? page}) async {
     try {
       page ??= 1;
-      Uri url = Uri.parse(_appConstants.getBestOfLastYear(page));
+      Uri url = Uri.parse(_appConstants.getBestOfLastYearEndpoint(page));
 
       if (accessToken == null) {
         throw Exception("Token Not be Null");
@@ -372,4 +372,41 @@ class ApiService extends IApiService {
     }
 
   }
+
+  @override
+  Future<List<GameModel>?> getDiscoverGames({int? page}) async {
+    try {
+      page ??= 1;
+      Uri url = Uri.parse(_appConstants.getBestOfLastYearEndpoint(page));
+
+      if (accessToken == null) {
+        throw Exception("Token Not be Null");
+      }
+
+      Map<String, String> headers = {'Authorization': 'token=' + accessToken!};
+
+      http.Response response = await http.get(url, headers: headers);
+
+      if (response.statusCode == 200) {
+        List<GameModel> games = [];
+        List body = jsonDecode(response.body);
+
+        body.forEach((gameElement) {
+          games.add(GameModel.fromJson(gameElement));
+        });
+        games.shuffle();
+        return games;
+      } else {
+        print("[HATA] [ApiService] [getDiscoverGames] --> " + response.statusCode.toString());
+        print(response.body);
+        return null;
+      }
+    } catch (e) {
+      print("[HATA] [ApiService] [getDiscoverGames] --> " + e.toString());
+      return null;
+    }
+  }
+
+
+
 }

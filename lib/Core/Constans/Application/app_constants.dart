@@ -47,9 +47,10 @@ class AppConstants {
   String get getTwitchPlayStoreDeepLink => _playStoreAppLink + _twitchAndroidPackageName;
 
 
-  String getBestOfAllTimeUrl(int page) => GAMES_ENDPOINT + "/bestOfAllTime?page=$page";
-  String getBestOfLastMonths(int page) => GAMES_ENDPOINT + "/bestOfLastMonths?page=$page";
-  String getBestOfLastYear(int page) => GAMES_ENDPOINT + "/bestOfLastYear?page=$page";
+  String getBestOfAllTimeEndpoint(int page) => GAMES_ENDPOINT + "/bestOfAllTime?page=$page";
+  String getBestOfLastMonthsEndpoint(int page) => GAMES_ENDPOINT + "/bestOfLastMonths?page=$page";
+  String getBestOfLastYearEndpoint(int page) => GAMES_ENDPOINT + "/bestOfLastYear?page=$page";
+  String getDiscoverEndpoint(int page) => GAMES_ENDPOINT + "/discover?page=$page";
 
 
   String getCoverUrl(String idString) => COVER_ENDPOINT + "/$idString";

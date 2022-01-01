@@ -110,12 +110,35 @@ mixin _$SearchPageViewModel on _SearchPageViewModelBase, Store {
     });
   }
 
+  final _$discoverAtom = Atom(name: '_SearchPageViewModelBase.discover');
+
+  @override
+  ObservableList<GameModel> get discover {
+    _$discoverAtom.reportRead();
+    return super.discover;
+  }
+
+  @override
+  set discover(ObservableList<GameModel> value) {
+    _$discoverAtom.reportWrite(value, super.discover, () {
+      super.discover = value;
+    });
+  }
+
   final _$searchGameAsyncAction =
       AsyncAction('_SearchPageViewModelBase.searchGame');
 
   @override
   Future<void> searchGame() {
     return _$searchGameAsyncAction.run(() => super.searchGame());
+  }
+
+  final _$getDiscoverAsyncAction =
+      AsyncAction('_SearchPageViewModelBase.getDiscover');
+
+  @override
+  Future<void> getDiscover() {
+    return _$getDiscoverAsyncAction.run(() => super.getDiscover());
   }
 
   final _$_SearchPageViewModelBaseActionController =
@@ -148,6 +171,7 @@ mixin _$SearchPageViewModel on _SearchPageViewModelBase, Store {
     return '''
 searchText: ${searchText},
 searchedGames: ${searchedGames},
+discover: ${discover},
 isShowHistory: ${isShowHistory},
 isShowDiscover: ${isShowDiscover},
 loadingContent: ${loadingContent}
