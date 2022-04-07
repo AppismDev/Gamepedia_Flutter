@@ -8,6 +8,7 @@ import 'package:gamepedia/Core/Constans/Enums/theme_enums.dart';
 import 'package:gamepedia/Core/Extensions/context_extensions.dart';
 import 'package:gamepedia/Core/Extensions/string_extensions.dart';
 import 'package:gamepedia/Models/ApiModels/game_model.dart';
+import 'package:gamepedia/Providers/Favorites/favorites_provider.dart';
 import 'package:gamepedia/Views/DetailsPage/ViewModel/details_page.viewmodel.dart';
 import 'package:gamepedia/Views/ImageViewerPage/View/image_viewer_page.dart';
 import 'package:gamepedia/Views/VideoPage/View/video_page.dart';
@@ -16,12 +17,12 @@ import 'package:gamepedia/Widgets/Logo/gamepedia_logo.dart';
 import 'package:gamepedia/Widgets/Painter/details_page_image_shadow_painter.dart';
 import 'package:gamepedia/Widgets/Chips/PlatformChip/platform_chip.dart';
 import 'package:gamepedia/Widgets/TwitchDialog/twitch_dialog.dart';
+import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class GameDetailsPage extends StatefulWidget {
   GameModel gameModel;
-
 
   GameDetailsPage({Key? key, required this.gameModel}) : super(key: key);
 
@@ -51,7 +52,7 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: buildAppBar(),
+      appBar: buildAppBar(context),
       body: buildSizedBox(context, widget.gameModel),
     );
   }
@@ -623,8 +624,27 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
     );
   }
 
-  AppBar buildAppBar() {
+  AppBar buildAppBar(BuildContext context) {
+    FavoritesProvider _favoritesProvider = Provider.of<FavoritesProvider>(context);
+
     return AppBar(
+      actions: [
+        IconButton(
+          onPressed: () {
+            if (_favoritesProvider.favoritesID.contains(widget.gameModel.id.toString())) {
+              _favoritesProvider.removeFavoriteGame(widget.gameModel.id.toString());
+            } else {
+              _favoritesProvider.addFavoriteGame(widget.gameModel);
+            }
+          },
+          icon: _favoritesProvider.favoritesID.contains(widget.gameModel.id.toString())
+              ? Icon(
+                  AntDesign.heart,
+                  color: Colors.red,
+                )
+              : Icon(AntDesign.hearto),
+        ),
+      ],
       centerTitle: true,
       title: GamepediaLogo(
         size: 18,

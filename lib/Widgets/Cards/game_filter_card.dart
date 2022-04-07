@@ -38,19 +38,22 @@ class GameFilterCard extends StatelessWidget {
                   alignment: Alignment.bottomRight,
                   children: [
                     if (gameModel.cover != null && gameModel.cover!.imageId != null) ...[
-                      CachedNetworkImage(
-                        color: Colors.red,
-                        imageUrl: _appConstants.getImageUrl(gameModel.cover!.imageId!, ImageSize.COVER_BIG),
-                        imageBuilder: (context, imageProvider) => ClipRRect(
-                          borderRadius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12)),
-                          child: Image(
-                            fit: BoxFit.contain,
-                            image: imageProvider,
+                      Container(
+                        width: double.infinity,
+                        height: double.infinity,
+                        child: CachedNetworkImage(
+                          imageUrl: _appConstants.getImageUrl(gameModel.cover!.imageId!, ImageSize.COVER_BIG),
+                          imageBuilder: (context, imageProvider) => ClipRRect(
+                            borderRadius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12)),
+                            child: Image(
+                              fit: BoxFit.cover,
+                              image: imageProvider,
+                            ),
                           ),
+                          progressIndicatorBuilder: (context, url, progress) {
+                            return Center(child: CircularProgressIndicator(value: progress.progress,),);
+                          },
                         ),
-                        progressIndicatorBuilder: (context, url, progress) {
-                          return Center(child: CircularProgressIndicator(value: progress.progress,),);
-                        },
                       ),
                     ] else ...[
                       Center(

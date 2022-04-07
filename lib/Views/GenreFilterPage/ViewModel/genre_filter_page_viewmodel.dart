@@ -9,6 +9,7 @@ part 'genre_filter_page_viewmodel.g.dart';
 class GenreFilterPageViewModel = _GenreFilterPageViewModelBase with _$GenreFilterPageViewModel;
 
 abstract class _GenreFilterPageViewModelBase with Store {
+  int paginationPage = 1;
 
   ApiService _apiService = ApiService.instance;
 
@@ -16,13 +17,22 @@ abstract class _GenreFilterPageViewModelBase with Store {
   bool _isLoading = false;
 
   @observable
+  bool _isPaginationLoading = false;
+
+  @observable
   ObservableList<GameModel?> genreFilteredGames = ObservableList();
 
   @computed
   bool get isLoading => _isLoading;
 
+  @computed
+  bool get isPaginationLoading => _isPaginationLoading;
+
   @action
   void setIsLoading(bool value) => _isLoading = value;
+
+  @action
+  void setIsPaginationLoading(bool value) => _isPaginationLoading = value;
 
   @action
   Future<void> getFilteredGames(List<GenreLiteModel?> genres) async {
@@ -35,12 +45,37 @@ abstract class _GenreFilterPageViewModelBase with Store {
 
     if (list.isNotEmpty) {
       _isLoading = true;
-      List<GameModel>? genreFilteredGamesResponse = await _apiService.getGenreFilteredGames(list.join(","));
+      List<GameModel>? genreFilteredGamesResponse =
+          await _apiService.getGenreFilteredGames(list.join(","), page: paginationPage);
+      if (genreFilteredGamesResponse != null) {
+        genreFilteredGames.addAll(genreFilteredGamesResponse);
+        paginationPage++;
+        _isPaginationLoading = false;
+      }
+
+      _isLoading = false;
+    }
+  }
+
+  @action
+  Future<void> getFilteredGamesPagination(List<GenreLiteModel?> genres) async {
+    List<int> list = [];
+    genres.forEach((element) {
+      if (element != null && element.id != null) {
+        list.add(element.id!);
+      }
+    });
+
+    if (list.isNotEmpty) {
+      _isPaginationLoading = true;
+      paginationPage++;
+      List<GameModel>? genreFilteredGamesResponse =
+          await _apiService.getGenreFilteredGames(list.join(","), page: paginationPage);
       if (genreFilteredGamesResponse != null) {
         genreFilteredGames.addAll(genreFilteredGamesResponse);
       }
 
-      _isLoading = false;
+      _isPaginationLoading = false;
     }
   }
 }

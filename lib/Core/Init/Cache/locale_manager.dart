@@ -41,8 +41,15 @@ class LocaleManager {
     await _preferences!.setBool(key.toString(), value);
   }
 
+  Future<void> setListValue(PreferencesKeys key, List<String> value) async {
+    await _preferences!.setStringList(key.toString(), value);
+  }
+
   String getStringValue(PreferencesKeys key) =>
       _preferences?.getString(key.toString()) ?? '';
+
+  List<String> getListValue(PreferencesKeys key) =>
+      _preferences!.getStringList(key.toString()) ?? [];
 
   bool getBoolValue(PreferencesKeys key) =>
       _preferences!.getBool(key.toString()) ?? false;

@@ -339,9 +339,9 @@ class ApiService extends IApiService {
   }
 
   @override
-  Future<List<GameModel>?> getGenreFilteredGames(String genres,{int? page}) async{
+  Future<List<GameModel>?> getGenreFilteredGames(String genres,{int page = 1}) async{
     try {
-      Uri url = Uri.parse(_appConstants.getGenreFilterUrl(genres));
+      Uri url = Uri.parse(_appConstants.getGenreFilterUrl(genres, page));
 
 
       if (accessToken == null) {
@@ -403,6 +403,41 @@ class ApiService extends IApiService {
       }
     } catch (e) {
       print("[HATA] [ApiService] [getDiscoverGames] --> " + e.toString());
+      return null;
+    }
+  }
+
+  @override
+  Future<List<GameModel>?> getGamesWithID({int? page, List<String>? ids}) async {
+    try {
+      page ??= 1;
+      ids ??= [];
+      Uri url = Uri.parse(_appConstants.getGamesWithIDUrl(page, ids));
+
+      if (accessToken == null) {
+        throw Exception("Token Not be Null");
+      }
+
+      Map<String, String> headers = {'Authorization': 'token=' + accessToken!};
+
+      http.Response response = await http.get(url, headers: headers);
+
+      if (response.statusCode == 200) {
+        List<GameModel> games = [];
+        List body = jsonDecode(response.body);
+
+        body.forEach((gameElement) {
+          games.add(GameModel.fromJson(gameElement));
+        });
+        games.shuffle();
+        return games;
+      } else {
+        print("[HATA] [ApiService] [getGamesWithID] --> " + response.statusCode.toString());
+        print(response.body);
+        return null;
+      }
+    } catch (e) {
+      print("[HATA] [ApiService] [getGamesWithID] --> " + e.toString());
       return null;
     }
   }

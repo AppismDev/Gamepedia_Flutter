@@ -16,6 +16,13 @@ mixin _$GenreFilterPageViewModel on _GenreFilterPageViewModelBase, Store {
       (_$isLoadingComputed ??= Computed<bool>(() => super.isLoading,
               name: '_GenreFilterPageViewModelBase.isLoading'))
           .value;
+  Computed<bool>? _$isPaginationLoadingComputed;
+
+  @override
+  bool get isPaginationLoading => (_$isPaginationLoadingComputed ??=
+          Computed<bool>(() => super.isPaginationLoading,
+              name: '_GenreFilterPageViewModelBase.isPaginationLoading'))
+      .value;
 
   final _$_isLoadingAtom =
       Atom(name: '_GenreFilterPageViewModelBase._isLoading');
@@ -30,6 +37,23 @@ mixin _$GenreFilterPageViewModel on _GenreFilterPageViewModelBase, Store {
   set _isLoading(bool value) {
     _$_isLoadingAtom.reportWrite(value, super._isLoading, () {
       super._isLoading = value;
+    });
+  }
+
+  final _$_isPaginationLoadingAtom =
+      Atom(name: '_GenreFilterPageViewModelBase._isPaginationLoading');
+
+  @override
+  bool get _isPaginationLoading {
+    _$_isPaginationLoadingAtom.reportRead();
+    return super._isPaginationLoading;
+  }
+
+  @override
+  set _isPaginationLoading(bool value) {
+    _$_isPaginationLoadingAtom.reportWrite(value, super._isPaginationLoading,
+        () {
+      super._isPaginationLoading = value;
     });
   }
 
@@ -58,6 +82,15 @@ mixin _$GenreFilterPageViewModel on _GenreFilterPageViewModelBase, Store {
         .run(() => super.getFilteredGames(genres));
   }
 
+  final _$getFilteredGamesPaginationAsyncAction =
+      AsyncAction('_GenreFilterPageViewModelBase.getFilteredGamesPagination');
+
+  @override
+  Future<void> getFilteredGamesPagination(List<GenreLiteModel?> genres) {
+    return _$getFilteredGamesPaginationAsyncAction
+        .run(() => super.getFilteredGamesPagination(genres));
+  }
+
   final _$_GenreFilterPageViewModelBaseActionController =
       ActionController(name: '_GenreFilterPageViewModelBase');
 
@@ -73,10 +106,23 @@ mixin _$GenreFilterPageViewModel on _GenreFilterPageViewModelBase, Store {
   }
 
   @override
+  void setIsPaginationLoading(bool value) {
+    final _$actionInfo =
+        _$_GenreFilterPageViewModelBaseActionController.startAction(
+            name: '_GenreFilterPageViewModelBase.setIsPaginationLoading');
+    try {
+      return super.setIsPaginationLoading(value);
+    } finally {
+      _$_GenreFilterPageViewModelBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 genreFilteredGames: ${genreFilteredGames},
-isLoading: ${isLoading}
+isLoading: ${isLoading},
+isPaginationLoading: ${isPaginationLoading}
     ''';
   }
 }

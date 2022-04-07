@@ -9,6 +9,7 @@ import 'package:gamepedia/Core/Constans/Enums/theme_enums.dart';
 import 'package:gamepedia/Core/Extensions/context_extensions.dart';
 import 'package:gamepedia/Core/Init/Language/locale_keys.g.dart';
 import 'package:gamepedia/Providers/Theme/theme_provider.dart';
+import 'package:gamepedia/Views/FavoritesPage/View/favorites_page.dart';
 import 'package:gamepedia/Views/GenreFilterPage/View/genre_filter_page.dart';
 import 'package:gamepedia/Views/HomePage/ViewModel/home_page_viewmodel.dart';
 import 'package:gamepedia/Views/SearchPage/View/search_page.dart';
@@ -62,6 +63,15 @@ class _HomePageViewState extends State<HomePageView> {
         children: [
           ListTile(
             title: Text(
+              "Favorilerim",
+            ),
+            onTap: () {
+              MaterialPageRoute route = MaterialPageRoute(builder: (context) => FavoritesPage());
+              Navigator.of(context).push(route);
+            },
+          ),
+          ListTile(
+            title: Text(
               "Ayarlar",
             ),
             onTap: () {
@@ -108,6 +118,8 @@ class _HomePageViewState extends State<HomePageView> {
   Widget buildBody() {
     return RefreshIndicator(
       onRefresh: () async {
+        _viewModel.selectedGenreModels.clear();
+        _viewModel.selectedThemeModels.clear();
         List<Future> futures = [
           _viewModel.getBestOfAllYearGames(),
           _viewModel.getBestOfLastMonths(),
@@ -364,6 +376,7 @@ class _HomePageViewState extends State<HomePageView> {
                     )),
                   ],
                 ),
+
                 Container(
                   height: context.dynamicHeight(0.5),
                   child: TabBarView(

@@ -1,4 +1,5 @@
 import 'package:gamepedia/Core/Constans/Enums/preferences_keys.dart';
+import 'package:gamepedia/Providers/Favorites/favorites_provider.dart';
 import 'package:gamepedia/Providers/Language/language_provider.dart';
 import 'package:gamepedia/Providers/Theme/theme_provider.dart';
 import 'package:provider/provider.dart';
@@ -14,5 +15,6 @@ class ApplicationProviders {
   List<SingleChildWidget> dependItems(PreferencesKeys themePrefs) => [
         ChangeNotifierProvider(create: (context) => ThemeProvider(themePrefs)),
         ChangeNotifierProvider(create: (context) => LanguageProvider()),
+        ChangeNotifierProvider(create: (context) => FavoritesProvider()),
       ];
 }
