@@ -50,7 +50,7 @@ class _HomePageViewState extends State<HomePageView> {
     ThemeProvider _themeProvider = Provider.of<ThemeProvider>(context, listen: false);
     return Scaffold(
       drawer: buildDrawer(context),
-      floatingActionButton: buildFAB(_themeProvider),
+      // floatingActionButton: buildFAB(_themeProvider),
       appBar: buildAppBar(),
       body: buildBody(),
     );

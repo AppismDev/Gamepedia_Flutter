@@ -51,6 +51,7 @@ dependencies:
   async: ^2.8.2
   collection: ^1.15.0
   sqflite: ^2.0.1
+  device_preview: ^1.0.0
 
 
 dev_dependencies:

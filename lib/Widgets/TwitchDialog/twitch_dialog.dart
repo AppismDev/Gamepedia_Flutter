@@ -27,7 +27,8 @@ class TwitchDialog extends StatelessWidget {
                   onTap: ()=>null,
                   child: Container(
                     width: context.dynamicWidth(0.8),
-                    height: context.dynamicHeight(0.3),
+                    height: 230,
+                    // height: context.dynamicHeight(0.3),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
